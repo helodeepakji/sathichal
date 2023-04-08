@@ -31,7 +31,7 @@ def loginfun(request):
 
 def signupfun(request):
     if request.method == 'POST':
-        full_name = request.POST['full_name']
+        full_name = request.POST['fullname']
         email = request.POST['email']
         username = request.POST['username']
         phone = request.POST['phone']
