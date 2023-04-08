@@ -10,6 +10,7 @@ def index(request):
     return render(request,"index.html")
 
 def loginfun(request):
+    if request.method == ''
     return render(request,"login.html")
 
 def signupfun(request):
@@ -26,7 +27,7 @@ def signupfun(request):
         confirm_password = request.POST['cpassword']
         
         # check if password and confirm password match
-        if password != confirm_password:
+        if password == confirm_password:
             # password saved in database is hashed
             db_password = make_password(password)
         else:
