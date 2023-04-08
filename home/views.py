@@ -25,6 +25,13 @@ def signupfun(request):
         password = request.POST['password']
         confirm_password = request.POST['cpassword']
         
+        # check if password and confirm password match
+        if password != confirm_password:
+            # password saved in database is hashed
+            db_password = make_password(password)
+        else:
+            return JsonResponse({'message': 'Passwords do not match'}, status=400)
+        
         # after varification of aadhaar
         
         # check if user already exists
@@ -32,7 +39,7 @@ def signupfun(request):
             return JsonResponse({'message': 'User already exists'}, status=400)
         
         # save user to database
-        newUser = sathiUser.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name, phone=phone, aadhaarno=addhaar)
+        newUser = sathiUser.objects.create_user(username=username, email=email, password=db_password, first_name=first_name, last_name=last_name, phone=phone, aadhaarno=addhaar)
         
         # login user
         try:
