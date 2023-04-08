@@ -10,7 +10,23 @@ def index(request):
     return render(request,"index.html")
 
 def loginfun(request):
-    if request.method == ''
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        
+        # authenticate user
+        user = authenticate(request, username=username, password=password)
+        
+        if not sathiUser.objects.filter(username=username).exists():
+            return JsonResponse({'message': 'User does not exist'}, status=400)
+        
+        # if user exists
+        if user is not None:
+            # login user
+            login(request, user)
+            return JsonResponse({'message': 'User logged in successfully'}, status=200)
+        else:
+            return JsonResponse({'message': 'Invalid credentials'}, status=400)
     return render(request,"login.html")
 
 def signupfun(request):
