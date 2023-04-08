@@ -1,0 +1,175 @@
+{% load static %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Ubuntu', sans-serif;
+    }
+
+    nav {
+        background: black;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    nav .utn {
+        width: 60%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    nav .utn .logo img {
+        width: 200px;
+    }
+
+    nav .utn i {
+        display: none;
+    }
+
+    nav .utn .nav {
+        margin: 0 20px;
+        transition: all 0.3s ease;
+    }
+
+    nav .dtn {
+        width: 40%;
+        display: flex;
+        justify-content: flex-end;
+        margin-right: 100px;
+        align-items: center;
+    }
+
+    nav .utn a {
+        text-decoration: none;
+        color: white;
+        margin: 5px;
+        padding: 5px;
+        border: 2px solid black;
+    }
+
+    nav .utn a:hover {
+        border-bottom: 2px solid white;
+    }
+
+    nav .dtn button {
+        background: white;
+        padding: 10px 20px;
+        border-radius: 15px;
+        font-size: 18px;
+        font-family: 'Ubuntu', sans-serif;
+        cursor: pointer;
+    }
+
+    @media (max-width: 1100px) {
+        nav .utn {
+            width: 80%;
+        }
+
+        nav .dtn {
+            width: 20%;
+            margin-right: 30px;
+        }
+    }
+
+    @media (max-width: 850px) {
+        nav .utn .logo img {
+            width: 150px;
+        }
+
+        nav .dtn {
+            width: 50%;
+        }
+
+        nav .utn {
+            width: 50%;
+            margin-right: 5px;
+        }
+
+        nav .utn .nav {
+            display: none;
+        }
+
+        nav .utn i {
+            display: block;
+        }
+
+        nav .utn .view {
+            padding: 50px 0;
+            position: absolute;
+            display: flex;
+            gap: 10%;
+            flex-direction: column;
+            background: black;
+            top: 70px;
+            left: -20px;
+            min-width: 350px;
+            height: 100%;
+            align-items: center;
+        }
+    }
+
+    @media (max-width: 550px) {
+        nav .utn {
+            width: 80%;
+        }
+
+        nav .dtn {
+            margin-right: 0;
+        }
+
+        nav .dtn button {
+            padding: 10px;
+            font-size: 15px;
+        }
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .show {
+        display: block !important;
+    }
+</style>
+<nav>
+    <div class="utn">
+        <i id="menubar" class="fa-solid fa-bars" onclick="openNav()" style="color:white;font-size:30px"></i>
+        <i id="closebar" class="fa-solid fa-xmark hidden" onclick="closeNav()"
+            style="color:white;font-size:30px"></i>
+        <div class="logo">
+            <img src="{% static 'images/sathichal.png' %}" width="200px" alt="">
+        </div>
+        <div class="nav" id="nav">
+            <a href="">Home</a>
+            <a href="">Services</a>
+            <a href="">About</a>
+            <a href="">Contact</a>
+            <a href="">Login</a>
+        </div>
+    </div>
+    <div class="dtn">
+        <button> Get started </button>
+    </div>
+</nav>
+<script>
+    function openNav() {
+        var element = document.getElementById("nav");
+        element.classList.add("view");
+        document.getElementById("menubar").classList.add("hidden");
+        document.getElementById("closebar").classList.remove("hidden");
+    }
+    function closeNav() {
+        var element = document.getElementById("nav");
+        element.classList.remove("view");
+        document.getElementById("menubar").classList.remove("hidden");
+        document.getElementById("closebar").classList.add("hidden");
+    }
+</script>
