@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 # import requests
 from django.http import JsonResponse
 from .models import sathiUser
@@ -38,7 +38,7 @@ def signupfun(request):
         gender = request.POST['gender']
         first_name = full_name.split()[0]
         last_name = full_name.split()[1]
-        addhaar = request.POST['addhaar']
+        addhaar = ""
         password = request.POST['password']
         confirm_password = request.POST['cpassword']
         
@@ -66,3 +66,17 @@ def signupfun(request):
             return JsonResponse({'message': 'Error while registering user'}, status=400)
         
     return render(request,"signup.html")
+
+
+def logoutuser(request):
+    logout(request)
+    return redirect(loginfun)
+
+
+def profile(request):
+    # if request.user.is_authenticated:
+        data = sathiUser.objects.filter(username="helodeepakji").values()
+        context = {"data":data[0]}
+        return render(request,"profile.html",context)
+    # else:
+    #     return redirect(loginfun)
