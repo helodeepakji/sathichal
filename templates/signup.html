@@ -234,7 +234,8 @@
               </button>
             </div>
             <p class="useemailpass">or use or email and password</p>
-            <form action="">
+            <form action="signup" method="post">
+              {% csrf_token %}
               <div class="slidep" id="phase1">
                 <div class="inpdiv">
                   <input
