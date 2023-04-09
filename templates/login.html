@@ -182,22 +182,13 @@ form {
                 </button>
               </div>
               <p class="useemailpass">or use or email and password</p>
-              <form action="">
+              <form action="login" method="post">
+                {% csrf_token %}
                 <div class="inpdiv">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    class="input"
-                  />
+                  <input type="text" name="username" placeholder="Username" class="input" />
                 </div>
                 <div class="inpdiv">
-                  <input
-                    type="password"
-                    name="password"
-                    class="input"
-                    placeholder="Password"
-                  />
+                  <input type="password" name="password" class="input" placeholder="Password"/>
                 </div>
                 <a href="#" class="forgetpass"><p>Forget your password ?</p></a>
                 <button id="submitBtn">SIGN IN</button>
