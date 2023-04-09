@@ -9,6 +9,10 @@ from django.contrib.auth.hashers import make_password, check_password
 def index(request):
     return render(request,"index.html")
 
+def contact(request):
+    return render(request,"contact.html")
+
+
 def loginfun(request):
     if request.method == 'POST':
         username = request.POST['username']
