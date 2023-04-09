@@ -14,3 +14,9 @@ class sathiUser(AbstractUser):
     phone = models.CharField(max_length=15)
     aadhaarno = models.CharField(max_length=12)
     pass
+
+class feedback(models.Model):
+    name = models.CharField(max_length=75)
+    email = models.EmailField(max_length=254)
+    phone = models.CharField(max_length=15)
+    query = models.TextField()

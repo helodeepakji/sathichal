@@ -49,7 +49,7 @@ def signupfun(request):
         else:
             return JsonResponse({'message': 'Passwords do not match'}, status=400)
         
-        # after varification of aadhaar
+        # after varification of phone number
         
         # check if user already exists
         if sathiUser.objects.filter(username=username).exists():
