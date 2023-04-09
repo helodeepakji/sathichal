@@ -12,6 +12,7 @@ GENDER_FIElD = [
 class sathiUser(AbstractUser):
     gender =  models.CharField(max_length=1,choices = GENDER_FIElD)
     phone = models.CharField(max_length=15)
+    dob = models.DateField()
     aadhaarno = models.CharField(max_length=12)
     pass
 
