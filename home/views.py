@@ -1,5 +1,5 @@
 from django.shortcuts import render
-import requests
+# import requests
 from django.http import JsonResponse
 from .models import sathiUser
 from django.contrib.auth import authenticate, login, logout
@@ -56,7 +56,7 @@ def signupfun(request):
             return JsonResponse({'message': 'User already exists'}, status=400)
         
         # save user to database
-        newUser = sathiUser.objects.create_user(username=username, email=email, password=db_password, first_name=first_name, last_name=last_name, phone=phone, aadhaarno=addhaar)
+        newUser = sathiUser.objects.create_user(username=username, email=email,gender=gender, password=db_password, first_name=first_name, last_name=last_name, phone=phone, aadhaarno=addhaar)
         
         # login user
         try:

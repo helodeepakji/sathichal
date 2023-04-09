@@ -152,11 +152,11 @@
             <a href="">Services</a>
             <a href="">About</a>
             <a href="">Contact</a>
-            {% if user.is_authenticated %}
+            {% comment %} {% if user.is_authenticated %} {% endcomment %}
             <a href="login">Login</a>
-            {% else %}
+            {% comment %} {% else %}
             <a href="profile">Profile</a>
-            {% endif %}
+            {% endif %} {% endcomment %}
         </div>
     </div>
     <div class="dtn">
