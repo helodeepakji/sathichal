@@ -17,6 +17,7 @@ def loginfun(request):
         # authenticate user
         user = authenticate(request, username=username, password=password)
         
+        # if user does not exist
         if not sathiUser.objects.filter(username=username).exists():
             return JsonResponse({'message': 'User does not exist'}, status=400)
         
@@ -36,27 +37,35 @@ def signupfun(request):
         username = request.POST['username']
         phone = request.POST['phone']
         gender = request.POST['gender']
-        first_name = full_name.split()[0]
-        last_name = full_name.split()[1]
+        dob = request.POST['dob']
+        first_name = full_name.split(" ")[0]
+        
+        # if user gives full name
+        if len(full_name.split(" ")) > 1:
+            last_name = full_name.split(" ")[-1]
+        else:
+            # if user gives only first name
+            last_name = ""
         addhaar = ""
         password = request.POST['password']
         confirm_password = request.POST['cpassword']
         
         # check if password and confirm password match
-        if password == confirm_password:
-            # password saved in database is hashed
-            db_password = make_password(password)
-        else:
-            return JsonResponse({'message': 'Passwords do not match'}, status=400)
+        if password != confirm_password or password == "" or confirm_password == "":
+            return JsonResponse({'message': 'Passwords do not match / Invalid password values'}, status=400)
         
+
         # after varification of phone number
         
         # check if user already exists
-        if sathiUser.objects.filter(username=username).exists():
+        if sathiUser.objects.filter(username=username).exists() or sathiUser.objects.filter(email=email).exists() or sathiUser.objects.filter(phone=phone).exists():
             return JsonResponse({'message': 'User already exists'}, status=400)
         
+        
         # save user to database
-        newUser = sathiUser.objects.create_user(username=username, email=email,gender=gender, password=db_password, first_name=first_name, last_name=last_name, phone=phone, aadhaarno=addhaar)
+        newUser = sathiUser.objects.create(username=username, email=email,gender=gender, password=make_password(password), first_name=first_name, last_name=last_name, phone=phone, aadhaarno=addhaar, dob=dob)
+        newUser.save()
+        
         
         # login user
         try:
