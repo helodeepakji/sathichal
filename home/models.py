@@ -14,6 +14,8 @@ class sathiUser(AbstractUser):
     phone = models.CharField(max_length=15)
     dob = models.DateField(default="2000-01-01")
     aadhaarno = models.CharField(max_length=12)
+    city = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
     pass
 
 class Contact(models.Model):

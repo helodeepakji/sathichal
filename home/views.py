@@ -86,9 +86,40 @@ def logoutuser(request):
 
 
 def profile(request):
-    if request.user.is_authenticated:
-        data = sathiUser.objects.filter(username=request.user).values()
-        context = {"data":data[0]}
-        return render(request,"profile.html",context)
-    # else:
-    #     return redirect(loginfun)
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            data = sathiUser.objects.filter(username=request.user).values()
+            context = {"data":data[0]}
+            return render(request,"profile.html",context)
+        else:
+            return redirect(loginfun)
+    if request.method == 'POST':
+        name = request.POST['name']
+        first_name = name.split(" ")[0]
+        if len(name.split(" ")) > 1:
+            last_name = name.split(" ")[-1]
+        else:
+            last_name = ""
+        dob = request.POST['age']
+        email = request.POST['email']
+        phone = request.POST['phone']
+        gov_id = request.POST['aadhar']
+        city = request.POST['city']
+        state = request.POST['state']
+        
+        sathiuser = sathiUser.objects.get(username=request.user)
+        if sathiuser:
+            sathiuser.first_name = first_name
+            sathiuser.last_name = last_name
+            sathiuser.dob = dob
+            sathiuser.email = email
+            sathiuser.aadhaarno = gov_id
+            sathiuser.city = city
+            sathiuser.state = state
+            sathiuser.save()
+            # if sathiuser.phone != phone:
+            #     #verify phone number
+            
+            # else:
+            #     sathiuser.phone = phone
+            return JsonResponse({'message': 'Profile updated successfully'}, status=200)
