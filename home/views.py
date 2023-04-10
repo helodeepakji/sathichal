@@ -9,6 +9,9 @@ from django.contrib.auth.hashers import make_password, check_password
 def index(request):
     return render(request,"index.html")
 
+def contact(request):
+    return render(request,"contact.html")
+
 def loginfun(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -83,8 +86,8 @@ def logoutuser(request):
 
 
 def profile(request):
-    # if request.user.is_authenticated:
-        data = sathiUser.objects.filter(username="helodeepakji").values()
+    if request.user.is_authenticated:
+        data = sathiUser.objects.filter(username=request.user).values()
         context = {"data":data[0]}
         return render(request,"profile.html",context)
     # else:
