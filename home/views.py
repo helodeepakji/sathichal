@@ -7,7 +7,18 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.mail import send_mail
 from django.conf import settings
 
+# for testing
+
+def ajaxfile(request):
+    print(request.GET['phone'])
+    response = {
+        'status': "successfull Otp Send"
+    }
+    return JsonResponse(response)
+
+
 # Create your views here.
+
 def index(request):
     return render(request,"index.html")
 
@@ -25,7 +36,7 @@ def contact(request):
         subject = "New message from sathichal.com"
         email_message = f"Name: {name}\nemail: {email}\nphone: {phone}\nmessage: {message}" 
         email_from = settings.EMAIL_HOST_USER
-        reciepent_list = ['tanugarg1234567@gmail.com']
+        reciepent_list = ['helodeepakji@gmail.com']
         send_mail(subject, email_message, email_from, reciepent_list, fail_silently=False)
         return JsonResponse({'message': 'Message sent successfully'}, status=200)
     return render(request,"contact.html")

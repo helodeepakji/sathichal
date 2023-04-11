@@ -23,3 +23,5 @@ class Contact(models.Model):
     email = models.EmailField(max_length=254)
     phone = models.CharField(max_length=15)
     question = models.TextField()
+    def __str__(self):
+        return self.email
