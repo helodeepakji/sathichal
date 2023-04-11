@@ -273,53 +273,6 @@
             }
         }
 
-        .cardarea {
-            width: 350px;
-            height: 500px;
-            background: white;
-            position: absolute;
-            right: 0;
-        }
-
-        .cardarea a {
-            float: right;
-            padding: 10px;
-            margin-right: 15px;
-            font-size: 25px;
-            cursor: pointer;
-        }
-
-        .cardarea .person {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            width: 100%;
-            padding: 5px;
-            margin: 20px 0;
-        }
-
-        .cardarea .detail {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .cardarea .detail img {
-            object-fit: cover;
-            margin-right: 10px;
-            border-radius: 50%;
-            box-shadow: 0px 0px 5px 1px grey;
-        }
-
-        .cardarea button {
-            padding: 10px 12px;
-            background: #00bac1;
-            font-size: 15px;
-            color: white;
-            border: 1px solid;
-            cursor: pointer;
-            border-radius: 15px;
-        }
-
     </style>
 </head>
 <body>
@@ -348,27 +301,6 @@
             </li>
         </ul>
     </div>
-
-    <div class="cardarea hidden">
-        <a id="closefriend">
-            <i class="fa fa-times"></i>
-        </a>
-        <div class="requestlist">
-            <div class="person" id="{{data.username}}">
-                <div class="detail">
-                    <img src="{{data.image}}" width="50px" height="50px" alt="">
-                    <div class="txt">
-                        <h3>{{data.first_name}} {{data.last_name}}</h3>
-                        <p>@{{data.username}}</p>
-                    </div>
-                </div>
-                <div class="accept">
-                    <button id="accept" aria-hidden="{{data.username}}">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="client-page">
         <div class="sidenav">
             <div class="client">
