@@ -238,16 +238,16 @@
               {% csrf_token %}
               <div class="slidep" id="phase1">
                 <div class="inpdiv">
-                  <input type="text" name="fullname"  placeholder="Full Name" class="input"/>
+                  <input type="text" name="fullname"  placeholder="Full Name" class="input" required/>
                 </div>
                 <div class="inpdiv">
-                  <input type="text" name="username" placeholder="Username" class="input"/>
+                  <input type="text" name="username" placeholder="Username" class="input" required/>
                 </div>
                 <div class="inpdiv">
-                  <input type="number" name="phone" placeholder="Phone No" class="input" />
+                  <input type="number" name="phone" placeholder="Phone No" class="input" required/>
                 </div>
                 <div class="inpdiv">
-                  <input type="email" name="email" placeholder="Email" class="input"/>
+                  <input type="email" name="email" placeholder="Email" class="input" required/>
                 </div>
                 <a type="none" id="submitBtn" onclick="phase1()">Next</a>
               </div>
@@ -261,17 +261,27 @@
                   </select>
                 </div>
                 <div class="inpdiv">
-                  <input type="date" class="input"  name="dob" placeholder="Date Of Birth" />
+                  <input type="date" class="input"  name="dob" placeholder="Date Of Birth" required />
                 </div>
                 <div class="inpdiv">
-                  <input type="password" name="password" class="input" placeholder="Password"/>
+                  <input type="password" name="password" class="input" placeholder="Password" required/>
                 </div>
                 <div class="inpdiv">
-                  <input type="password" name="cpassword" class="input"  placeholder="Confirm Password"/>
+                  <input type="password" name="cpassword" class="input"  placeholder="Confirm Password" required/>
                 </div>
                 <div class="btndiv">
                   <a id="submitBtn" style="width: 43%" onclick="phase2()">Previous</a>
-                  <button id="submitBtn">Submit</button>
+                  <a id="submitBtn" style="width: 43%" onclick="phase3()">Send OTP</a>
+                </div>
+              </div>
+              <div class="slidep hidden" id="phase3">
+                <p id="status"></p>
+                <div class="inpdiv">
+                  <input type="password" name="otp" class="input"  placeholder="Enter the Opt" required/>
+                </div>
+                <div class="btndiv">
+                  <a id="submitBtn" style="width: 43%" onclick="phase4()">Previous</a>
+                  <button type="Submit" id="submitBtn">Submit</button> 
                 </div>
               </div>
             </form>
@@ -281,15 +291,48 @@
       </div>
     </div>
     {% include 'layout/footer.html' %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script>
       function phase1() {
         document.getElementById("phase1").classList.add("hidden");
         document.getElementById("phase2").classList.remove("hidden");
+        document.getElementById("phase3").classList.add("hidden");
       }
       function phase2() {
-        document.getElementById("phase2").classList.add("hidden");
         document.getElementById("phase1").classList.remove("hidden");
+        document.getElementById("phase2").classList.add("hidden");
+        document.getElementById("phase3").classList.add("hidden");
       }
+      function phase3() {
+        document.getElementById("phase1").classList.add("hidden");
+        document.getElementById("phase2").classList.add("hidden");
+        document.getElementById("phase3").classList.remove("hidden");
+        sendOTP(8076763204);
+      }
+      function phase4() {
+        document.getElementById("phase1").classList.add("hidden");
+        document.getElementById("phase2").classList.remove("hidden");
+        document.getElementById("phase3").classList.add("hidden");
+      }
+
+      function sendOTP(number){
+        console.log(number);
+        $.ajax(
+          {
+              url:  "{% url 'ajaxfile' %}", 
+              data: {
+                  'phone': number,
+              },
+              dataType: 'json',
+              success: function(result){
+                if(result.status){
+                  $("#status").html(result.status);
+                }
+                console.log(result);
+              }
+          });
+      }
+
     </script>
   </body>
 </html>

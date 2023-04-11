@@ -9,6 +9,7 @@ urlpatterns = [
     path('signup', views.signupfun, name='signup'),  
     path('contact', views.contact, name='contact'),   
     path('profile', views.profile, name='profile'),   
-    path('logout', views.logoutuser, name='logout'),   
+    path('logout', views.logoutuser, name='logout'),
+    path('ajaxfile', views.ajaxfile, name='ajaxfile'),   
 ]
 

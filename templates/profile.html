@@ -14,7 +14,7 @@
         }
 
         body {
-            background-color: #0000001a;
+            background: linear-gradient( 331deg, rgba(14, 14, 14, 1) 70%, rgba(2, 166, 166, 1) 70% );
             font-family: Arial;
         }
 
@@ -207,7 +207,7 @@
 
         .field button {
             min-width: 135px;
-            background-color: #fd5b5d;
+            background-color: #000000;
             border: 0;
             border-radius: 4px;
             box-sizing: border-box;
@@ -371,7 +371,7 @@
     <div class="client-page">
         <div class="sidenav">
             <div class="client">
-                <img src="{{data.image}}" alt="" width="150" height="150">
+                <img id="profile_pic" src="{{data.image}}" alt="" width="150" height="150">
     
                 <div class="name">
                     {{data.first_name}} {{data.last_name}}
@@ -445,7 +445,7 @@
                     </table>
                 </div>
                 <div class="card-body hidden" id="editdetails">
-                    <form action="Profile" method="post">
+                    <form action="profile" method="post">
                         {% csrf_token %}
                         <div class="field">
                             <label for="">Name </label>
@@ -453,7 +453,7 @@
                         </div>
                         <div class="field">
                             <label for="">Date Of Birth </label>
-                            <input type="date" name="age" value="{{data.dob}}">
+                            <input type="date" name="age" value="{{data.dob|date:"Y-m-d"}}">
                         </div>
                         <div class="field">
                             <label for="">Gender </label>
