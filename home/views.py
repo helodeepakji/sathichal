@@ -6,11 +6,27 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.mail import send_mail
 from django.conf import settings
+from twilio.rest import Client
+from .util import otp_handler
 
 # for testing
 
+userOtp = otp_handler()
+
 def ajaxfile(request):
-    print(request.GET['phone'])
+    # print(request.POST['phone'])
+    phone = request.POST['phone']
+    
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_ACCOUNT_AUTH_TOKEN)
+    # otp = otp_handler()
+    # global userOtp
+    # userOtp = otp
+    print(userOtp)
+    message = client.messages.create(
+        body = f"Your OTP is {userOtp}",
+        from_ = settings.TWILIO_PHONE_NUMBER,
+        to=phone
+    )
     response = {
         'status': "successfull Otp Send"
     }
@@ -75,41 +91,47 @@ def signupfun(request):
         gender = request.POST['gender']
         dob = request.POST['dob']
         first_name = full_name.split(" ")[0]
-        
-        # if user gives full name
-        if len(full_name.split(" ")) > 1:
-            last_name = full_name.split(" ")[-1]
-        else:
-            # if user gives only first name
-            last_name = ""
-        addhaar = ""
-        password = request.POST['password']
-        confirm_password = request.POST['cpassword']
-        
-        # check if password and confirm password match
-        if password != confirm_password or password == "" or confirm_password == "":
-            return JsonResponse({'message': 'Passwords do not match / Invalid password values'}, status=400)
-        
+        otp = request.POST['otp']
 
-        # after varification of phone number
+        # print(otp)
+        global userOtp
+        print("userOtp",userOtp)
         
-        # check if user already exists
-        if sathiUser.objects.filter(username=username).exists() or sathiUser.objects.filter(email=email).exists() or sathiUser.objects.filter(phone=phone).exists():
-            return JsonResponse({'message': 'User already exists'}, status=400)
-        
-        
-        # save user to database
-        newUser = sathiUser.objects.create(username=username, email=email,gender=gender, password=make_password(password), first_name=first_name, last_name=last_name, phone=phone, aadhaarno=addhaar, dob=dob)
-        newUser.save()
-        
-        
-        # login user
-        try:
-            login(request, newUser)
-            return JsonResponse({'message': 'User registered successfully'}, status=200)
-        except:
-            return JsonResponse({'message': 'Error while registering user'}, status=400)
-        
+        if int(otp) != userOtp:
+            return JsonResponse({'message': 'Invalid OTP'}, status=400)
+        else :
+            # if user gives full name
+            if len(full_name.split(" ")) > 1:
+                last_name = full_name.split(" ")[-1]
+            else:
+                # if user gives only first name
+                last_name = ""
+            addhaar = ""
+            password = request.POST['password']
+            confirm_password = request.POST['cpassword']
+            
+            # check if password and confirm password match
+            if password != confirm_password or password == "" or confirm_password == "":
+                return JsonResponse({'message': 'Passwords do not match / Invalid password values'}, status=400)
+            
+            # check if user already exists
+            if sathiUser.objects.filter(username=username).exists() or sathiUser.objects.filter(email=email).exists() or sathiUser.objects.filter(phone=phone).exists():
+                return JsonResponse({'message': 'User already exists'}, status=400)
+            
+            # save user to database
+            newUser = sathiUser.objects.create(username=username, email=email,gender=gender, password=make_password(password), first_name=first_name, last_name=last_name, phone=phone, aadhaarno=addhaar, dob=dob)
+            newUser.save()
+            
+            # make the otp none after user is registered
+            # userOtp = None
+            
+            # login user
+            try:
+                login(request, newUser)
+                return JsonResponse({'message': 'User registered successfully'}, status=200)
+            except:
+                return JsonResponse({'message': 'Error while registering user'}, status=400)
+            
     return render(request,"signup.html")
 
 
