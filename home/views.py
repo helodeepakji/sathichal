@@ -41,6 +41,10 @@ def contact(request):
         return JsonResponse({'message': 'Message sent successfully'}, status=200)
     return render(request,"contact.html")
 
+def routing(request):
+    return render(request,"routing.html")
+
+
 def loginfun(request):
     if request.method == 'POST':
         username = request.POST['username']

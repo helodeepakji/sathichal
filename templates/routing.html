@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" /></head>
+    <title>Sathi Chal || Welcome</title>
+    <style>
+        #map{
+            width: 100%;
+            height: 90vh;
+        }
+        .inputbox {
+            width: 280px;
+            display: grid;
+            position: absolute;
+            top: 11%;
+            right: 10%;
+            background: white;
+            padding: 20px 15px;
+        }
+        .inputbox .input {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+        .inputbox .input input {
+            padding: 5px 10px;
+            margin: 5px 0;
+        }
+        .current {
+            width: 40px;
+            height: 40px;
+            background: white;
+            position: absolute;
+            right: 1%;
+            bottom: 27.5%;
+            font-size: 25px;
+            display: grid;
+            align-items: center;
+            justify-items: center;
+            box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    {% include 'layout/navbar.html' %}
+    
+     <div id="map">
+    </div>
+    <div class="inputbox">
+        <div class="input">
+            <label for="source">Source :</label>
+            <input type="text" id="source">
+        </div>
+        <div class="input">
+            <label for="destination">Destination :</label>
+            <input type="text" id="destination">
+        </div>
+    </div>
+    <div class="current">
+        <i class="fas fa-location"></i>
+    </div>
+     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsZwc4NHo2JhjvtoFmv5N89u7Ta042KtE&libraries=places"></script>
+     <script>
+        var pos;
+        let marker1 = null;
+        const map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: 48.845297, lng: 2.303431 },
+          zoom: 15
+        });
+
+        var marker = new google.maps.Marker({
+            position: { lat: 48.845297, lng: 2.303431 },
+            map: map,
+            draggable: true
+          });
+
+        
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+                },
+                );
+            } 
+            var marker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                draggable: true
+              });
+     </script>
+
+    {% include 'layout/footer.html' %}
+</body>
+</html>
