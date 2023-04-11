@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
     <title>Document</title>
+    {% load static %}
     <style>
         @import url(https://fonts.googleapis.com/css?family=Dancing+Script);
 
@@ -120,7 +121,7 @@
         }
 
         .main h2 {
-            color: #333;
+            color: #fff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 24px;
             margin-bottom: 10px;
@@ -371,7 +372,7 @@
     <div class="client-page">
         <div class="sidenav">
             <div class="client">
-                <img id="profile_pic" src="{{data.image}}" alt="" width="150" height="150">
+                <img id="profile_pic" src="{% if data.image %}{{data.image}}{% else %}{% static 'images/profile.jpg' %}{% endif %}" alt="" width="150" height="150">
     
                 <div class="name">
                     {{data.first_name}} {{data.last_name}}
@@ -469,7 +470,7 @@
                         </div>
                         <div class="field">
                             <label for="">Phone no </label>
-                            <input type="text" name="phone" value="{{data.phone}}">
+                            <input type="text" name="phone" value="{{data.phone}}" readonly>
                         </div>
                         <div class="field">
                             <label for="">Gov Id </label>
