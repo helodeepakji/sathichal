@@ -1,15 +1,33 @@
 from django.shortcuts import redirect, render
 # import requests
 from django.http import JsonResponse
-from .models import sathiUser
+from .models import sathiUser, Contact
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password, check_password
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 def index(request):
     return render(request,"index.html")
 
 def contact(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        phone = request.POST['phone']
+        message = request.POST['message']
+        
+        contact = Contact(name=name, email=email, phone=phone, question=message)
+        contact.save()
+        # send email to admin
+        # putting my own mail as receiver for testing
+        subject = "New message from sathichal.com"
+        email_message = f"Name: {name}\nemail: {email}\nphone: {phone}\nmessage: {message}" 
+        email_from = settings.EMAIL_HOST_USER
+        reciepent_list = ['tanugarg1234567@gmail.com']
+        send_mail(subject, email_message, email_from, reciepent_list, fail_silently=False)
+        return JsonResponse({'message': 'Message sent successfully'}, status=200)
     return render(request,"contact.html")
 
 def loginfun(request):
@@ -86,9 +104,40 @@ def logoutuser(request):
 
 
 def profile(request):
-    if request.user.is_authenticated:
-        data = sathiUser.objects.filter(username=request.user).values()
-        context = {"data":data[0]}
-        return render(request,"profile.html",context)
-    # else:
-    #     return redirect(loginfun)
+    if request.method == 'GET':
+        if request.user.is_authenticated:
+            data = sathiUser.objects.filter(username=request.user).values()
+            context = {"data":data[0]}
+            return render(request,"profile.html",context)
+        else:
+            return redirect(loginfun)
+    if request.method == 'POST':
+        name = request.POST['name']
+        first_name = name.split(" ")[0]
+        if len(name.split(" ")) > 1:
+            last_name = name.split(" ")[-1]
+        else:
+            last_name = ""
+        dob = request.POST['age']
+        email = request.POST['email']
+        phone = request.POST['phone']
+        gov_id = request.POST['aadhar']
+        city = request.POST['city']
+        state = request.POST['state']
+        
+        sathiuser = sathiUser.objects.get(username=request.user)
+        if sathiuser:
+            sathiuser.first_name = first_name
+            sathiuser.last_name = last_name
+            sathiuser.dob = dob
+            sathiuser.email = email
+            sathiuser.aadhaarno = gov_id
+            sathiuser.city = city
+            sathiuser.state = state
+            sathiuser.save()
+            # if sathiuser.phone != phone:
+            #     #verify phone number
+            
+            # else:
+            #     sathiuser.phone = phone
+            return JsonResponse({'message': 'Profile updated successfully'}, status=200)
