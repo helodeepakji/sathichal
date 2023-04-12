@@ -5,11 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" /></head>
+    {% load static %}
     <title>Sathi Chal || Welcome</title>
     <style>
         #map{
             width: 100%;
             height: 90vh;
+            z-index: 0;
         }
         .inputbox {
             width: 280px;
@@ -43,6 +45,11 @@
             box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
             cursor: pointer;
         }
+
+        #source,#destination {
+            width: 90%;
+        }
+
     </style>
 </head>
 <body>
@@ -53,49 +60,57 @@
     <div class="inputbox">
         <div class="input">
             <label for="source">Source :</label>
-            <input type="text" id="source">
+            <input type="text" id="source" class="searchloc">
         </div>
         <div class="input">
             <label for="destination">Destination :</label>
-            <input type="text" id="destination">
+            <input type="text" id="destination" class="searchloc">
         </div>
     </div>
-    <div class="current">
+    <div class="current" onclick="currentLocation()">
         <i class="fas fa-location"></i>
     </div>
      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsZwc4NHo2JhjvtoFmv5N89u7Ta042KtE&libraries=places"></script>
+     <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
+     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
      <script>
-        var pos;
+        var current_pos;
         let marker1 = null;
         const map = new google.maps.Map(document.getElementById('map'), {
           center: { lat: 48.845297, lng: 2.303431 },
-          zoom: 15
+          zoom: 15,
+          scrollwheel: false,
         });
 
-        var marker = new google.maps.Marker({
-            position: { lat: 48.845297, lng: 2.303431 },
-            map: map,
-            draggable: true
-          });
-
         
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    pos = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                    };
-                },
+        function currentLocation(){
+            document.getElementById('source').value= "Current Location";
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        current_pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                        };
+                        var marker = new google.maps.Marker({
+                            position: current_pos,
+                            map: map,
+                            draggable: true
+                          });
+                          map.setCenter(current_pos);
+                    },
                 );
             } 
             var marker = new google.maps.Marker({
-                position: pos,
+                position: current_pos,
                 map: map,
-                draggable: true
-              });
+                draggable: true,
+            });
+        }
+        
+        
      </script>
-
+     <script src="{% static 'js/searchloc.js' %}"></script>
     {% include 'layout/footer.html' %}
 </body>
 </html>
