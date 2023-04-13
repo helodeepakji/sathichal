@@ -304,8 +304,13 @@
     <div class="client-page">
         <div class="sidenav">
             <div class="client">
-                <img id="profile_pic" src="{% if data.image %}{{data.image}}{% else %}{% static 'images/profile.jpg' %}{% endif %}" alt="" width="150" height="150">
+                <img id="profile_pic" class="profile_pic" src="{% if data.image %}{{data.image}}{% else %}{% static 'images/profile.jpg' %}{% endif %}" alt="" width="150" height="150">
     
+                    <label id="edit_profile_pic" class="hidden" for="file-input">
+                      <img src="https://icons.iconarchive.com/icons/dtafalonso/android-lollipop/128/Downloads-icon.png"/>
+                    </label>
+                  
+
                 <div class="name">
                     {{data.first_name}} {{data.last_name}}
                 </div>
@@ -453,6 +458,7 @@
                                 <option value="Uttarakhand">Uttarakhand</option>
                                 <option value="West Bengal">West Bengal</option>
                             </select>
+                            <input id="file-input" name="profile" style="display:none" type="file" />
                         </div>
                         <div class="field">
                             <button type="submit">Save</button>
@@ -473,6 +479,8 @@
                 $("#settings").addClass("active");
                 $("#client").removeClass("active");
                 $("#editdetails").removeClass("hidden");
+                $("#edit_profile_pic").removeClass("hidden");
+                $("#profile_pic").addClass("hidden");
             });
             
             $("#client").click(function(){
@@ -480,6 +488,8 @@
                 $("#settings").removeClass("active");
                 $("#client").addClass("active");
                 $("#editdetails").addClass("hidden");
+                $("#edit_profile_pic").addClass("hidden");
+                $("#profile_pic").removeClass("hidden");
             });
 
         });
