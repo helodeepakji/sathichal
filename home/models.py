@@ -16,6 +16,7 @@ class sathiUser(AbstractUser):
     aadhaarno = models.CharField(max_length=12)
     city = models.CharField(max_length=50, default="")
     state = models.CharField(max_length=50, default="")
+    profile_pic = models.ImageField(upload_to="profile_pics", blank=True, null=True)
     pass
 
 class Contact(models.Model):
