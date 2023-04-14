@@ -143,8 +143,8 @@ def logoutuser(request):
 def profile(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
-            data = sathiUser.objects.filter(username=request.user).values()
-            context = {"data":data[0]}
+            data = sathiUser.objects.get(username=request.user)
+            context = {"data":data}
             return render(request,"profile.html",context)
         else:
             return redirect(loginfun)
@@ -161,7 +161,7 @@ def profile(request):
         gov_id = request.POST['aadhar']
         city = request.POST['city']
         state = request.POST['state']
-        
+        profile = request.FILES.get('profile',None)
         sathiuser = sathiUser.objects.get(username=request.user)
         if sathiuser:
             sathiuser.first_name = first_name
@@ -171,6 +171,7 @@ def profile(request):
             sathiuser.aadhaarno = gov_id
             sathiuser.city = city
             sathiuser.state = state
+            sathiuser.profile_pic = profile
             sathiuser.save()
             # if sathiuser.phone != phone:
             #     #verify phone number

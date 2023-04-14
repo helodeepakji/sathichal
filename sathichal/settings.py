@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'home'
+    'cloudinary_storage',
+    'home',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -146,3 +148,13 @@ EMAIL_HOST_PASSWORD = 'conversation12'
 TWILIO_ACCOUNT_SID = 'ACa146af9bf0771ff1106ca918cf82c201'
 TWILIO_ACCOUNT_AUTH_TOKEN = '0dfa1e2d88e6a96e3ca941cc5f927e36'
 TWILIO_PHONE_NUMBER = '+15075163369'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dxobi1y9g',
+    'API_KEY': '445997531442974',
+    'API_SECRET': '7BsBUy7Go6Uh2mFzdCg_NwPHvqI'
+}
+
+
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
