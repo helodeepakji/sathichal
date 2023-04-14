@@ -17,7 +17,7 @@
             width: 280px;
             display: grid;
             position: absolute;
-            top: 11%;
+            top: 85px;
             right: 10%;
             background: white;
             padding: 20px 15px;
@@ -46,6 +46,20 @@
             cursor: pointer;
         }
 
+        #floating-panel {
+            position: absolute;
+            top: 85px;
+            left: 25%;
+            z-index: 5;
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #999;
+            text-align: center;
+            font-family: "Roboto", "sans-serif";
+            line-height: 30px;
+            padding-left: 10px;
+        }
+
         #source,#destination {
             width: 90%;
         }
@@ -55,8 +69,16 @@
 <body>
     {% include 'layout/navbar.html' %}
     
-     <div id="map">
-    </div>
+    <div id="floating-panel">
+        <b>Mode of Travel: </b>
+        <select id="mode">
+          <option value="DRIVING">Driving</option>
+          <option value="WALKING">Walking</option>
+          <option value="BICYCLING">Bicycling</option>
+          <option value="TRANSIT">Transit</option>
+        </select>
+      </div>
+     <div id="map"></div>
     <div class="inputbox">
         <div class="input">
             <label for="source">Source :</label>
