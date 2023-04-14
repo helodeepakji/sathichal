@@ -16,6 +16,9 @@ const autocomplete_source = new google.maps.places.Autocomplete(source_input);
 // bounds option in the request.
 autocomplete.bindTo("bounds", map);
 
+
+// auto call after change mode
+
 document.getElementById("mode").addEventListener("change", () => {
   calculateAndDisplayRoute(directionsService, directionsRenderer, source,destination);
 });
