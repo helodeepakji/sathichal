@@ -14,13 +14,10 @@ from .util import otp_handler
 userOtp = otp_handler()
 
 def ajaxfile(request):
-    # print(request.POST['phone'])
     phone = request.POST['phone']
+    print(phone)
     
     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_ACCOUNT_AUTH_TOKEN)
-    # otp = otp_handler()
-    # global userOtp
-    # userOtp = otp
     print(userOtp)
     message = client.messages.create(
         body = f"Your OTP is {userOtp}",
@@ -57,8 +54,20 @@ def contact(request):
         return JsonResponse({'message': 'Message sent successfully'}, status=200)
     return render(request,"contact.html")
 
+
 def routing(request):
-    return render(request,"routing.html")
+    if request.user.is_authenticated:
+        return render(request,"routing.html")
+    else :
+        return redirect(loginfun)
+    
+
+def route(request):
+    if request.user.is_authenticated:
+        return render(request,"route.html")
+    else :
+        return redirect(loginfun)
+    
 
 
 def loginfun(request):

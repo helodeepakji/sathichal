@@ -64,6 +64,21 @@
             width: 90%;
         }
 
+        .findout {
+            padding: 10px;
+            position: absolute;
+            bottom: 30px;
+            background: white;
+            left: 20px;
+            box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+            cursor: pointer;
+        }
+
+        .findout i {
+            margin: 0 5px;
+            padding: 0 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -91,6 +106,9 @@
     </div>
     <div class="current" onclick="currentLocation()">
         <i class="fas fa-location"></i>
+    </div>
+    <div class="findout" onclick="goNext()">
+        Start Now <i class="fas fa-location-arrow"></i>
     </div>
      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsZwc4NHo2JhjvtoFmv5N89u7Ta042KtE&libraries=places"></script>
      <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script>
@@ -129,7 +147,11 @@
                 draggable: true,
             });
         }
-        
+
+
+        function goNext(){
+            window.location.href = '/route';
+        }
         
      </script>
      <script src="{% static 'js/searchloc.js' %}"></script>
