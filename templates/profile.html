@@ -310,19 +310,12 @@
     <div class="client-page">
       <div class="sidenav">
         <div class="client">
-          <img
-            id="profile_pic"
-            class="profile_pic"
-            src="{% if data.profile_pic %}{{data.profile_pic.url}}{% else %}{% static 'images/profile.jpg' %} {% endif %}"
-            alt=""
-            width="150"
-            height="150"
-          />
+          <img id="profile_pic" class="profile_pic" src="{% if data.profile_pic %}{{data.profile_pic.url}}{% else %}{% static 'images/profile.jpg' %} {% endif %}" alt="" width="150" height="150" />
 
-          <label id="edit_profile_pic" class="hidden" for="file-input">
-            <img
+          <label id="edit_profile_pic" class="hidden" for="file_input">
+            <img id="upload_pic_icon"
               src="https://icons.iconarchive.com/icons/dtafalonso/android-lollipop/128/Downloads-icon.png"
-            />
+              width="150" height="150" />
           </label>
 
           <div class="name">{{data.first_name}} {{data.last_name}}</div>
@@ -481,12 +474,7 @@
                   <option value="Uttarakhand">Uttarakhand</option>
                   <option value="West Bengal">West Bengal</option>
                 </select>
-                <input
-                  id="file-input"
-                  name="profile"
-                  style="display: none"
-                  type="file"
-                />
+                <input id="file_input" name="profile" style="display: none"  type="file" />
               </div>
               <div class="field">
                 <button type="submit">Save</button>
@@ -518,6 +506,20 @@
           $("#edit_profile_pic").addClass("hidden");
           $("#profile_pic").removeClass("hidden");
         });
+
+        $('#file-input').change(function(){
+          console.log($(this).val());
+          $("#upload_pic_icon").attr('src',);
+        });
+
+        file_input.onchange = evt => {
+          const [file] = file_input.files
+          if (file) {
+              upload_pic_icon.src = URL.createObjectURL(file);
+              //document.getElementById("upload_pic_icon").style.display = "block";
+          }
+        }
+
       });
     </script>
   </body>

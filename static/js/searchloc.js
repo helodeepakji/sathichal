@@ -1,11 +1,15 @@
 var source;
 var destination;
 
+const directionsRenderer = new google.maps.DirectionsRenderer();
+const directionsService = new google.maps.DirectionsService();
+
 const source_input = document.getElementById("source");
 const destination_input = document.getElementById("destination");
 
 const autocomplete = new google.maps.places.Autocomplete(destination_input);
 const autocomplete_source = new google.maps.places.Autocomplete(source_input);
+
 
 // Bind the map's bounds (viewport) property to the autocomplete object,
 // so that the autocomplete requests use the current map bounds for the
@@ -13,9 +17,16 @@ const autocomplete_source = new google.maps.places.Autocomplete(source_input);
 autocomplete.bindTo("bounds", map);
 
 
+// auto call after change mode
+
+document.getElementById("mode").addEventListener("change", () => {
+  calculateAndDisplayRoute(directionsService, directionsRenderer, source,destination);
+});
+
+// set the rounting passing source and destination
 function calculateAndDisplayRoute(directionsService, directionsRenderer,source,destination) {
-  // const selectedMode = document.getElementById("mode").value;
-  const selectedMode = "DRIVING";
+
+  const selectedMode = document.getElementById("mode").value;
 
   directionsService
     .route({
@@ -53,8 +64,6 @@ autocomplete.addListener("place_changed", () => {
   // If the place has a geometry, then present it on a map.
   if (place.geometry.viewport) {
     map.fitBounds(place.geometry.viewport);
-    const directionsRenderer = new google.maps.DirectionsRenderer();
-    const directionsService = new google.maps.DirectionsService();
     directionsRenderer.setMap(map);
     destination = place.geometry.location;
     if (document.getElementById("source").value == "Current Location") {
