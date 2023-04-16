@@ -25,7 +25,7 @@ document.getElementById("mode").addEventListener("change", () => {
 
 // set the rounting passing source and destination
 function calculateAndDisplayRoute(directionsService, directionsRenderer,source,destination) {
-
+  directionsDisplay.setMap(null);
   const selectedMode = document.getElementById("mode").value;
 
   directionsService
