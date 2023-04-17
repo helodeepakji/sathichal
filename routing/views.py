@@ -9,6 +9,10 @@ def index(request):
         return render(request,"route.html")
     else :
         return redirect(loginfun)
- 
-def rout(request):
+
+def route(request):
+    return JsonResponse({'message': 'Working'}, status=400)
+
+def routing(request, src_lat, src_lng, dest_lat, dest_lng):
+    print(src_lat, src_lng, dest_lat, dest_lng)
     return JsonResponse({'message': 'Working'}, status=400)
