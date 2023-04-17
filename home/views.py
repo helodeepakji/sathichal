@@ -60,14 +60,7 @@ def routing(request):
         return render(request,"routing.html")
     else :
         return redirect(loginfun)
-    
-
-def route(request):
-    if request.user.is_authenticated:
-        return render(request,"route.html")
-    else :
-        return redirect(loginfun)
-    
+       
 
 
 def loginfun(request):
