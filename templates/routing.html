@@ -36,14 +36,20 @@
             height: 40px;
             background: white;
             position: absolute;
-            right: 1%;
-            bottom: 27.5%;
+            right: 10px;
+            bottom: 245px;
             font-size: 25px;
             display: grid;
             align-items: center;
             justify-items: center;
             box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
             cursor: pointer;
+        }
+
+        .refreshbtn{
+            bottom: 310px;
+            color: black;
+            text-decoration: none;
         }
 
         #floating-panel {
@@ -79,6 +85,10 @@
             padding: 0 5px;
         }
 
+        .hidden{
+            display: none;
+        }
+
     </style>
 </head>
 <body>
@@ -107,7 +117,10 @@
     <div class="current" onclick="currentLocation()">
         <i class="fas fa-location"></i>
     </div>
-    <div class="findout" onclick="goNext()">
+    <a href="" class="current refreshbtn">
+        <i class="fas fa-redo"></i>
+    </a>
+    <div class="findout hidden" id="startbtn" onclick="goNext()">
         Start Now <i class="fas fa-location-arrow"></i>
     </div>
      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsZwc4NHo2JhjvtoFmv5N89u7Ta042KtE&libraries=places"></script>
@@ -140,12 +153,7 @@
                           map.setCenter(current_pos);
                     },
                 );
-            } 
-            var marker = new google.maps.Marker({
-                position: current_pos,
-                map: map,
-                draggable: true,
-            });
+            }
         }
 
 
