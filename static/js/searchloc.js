@@ -10,22 +10,30 @@ const destination_input = document.getElementById("destination");
 const autocomplete = new google.maps.places.Autocomplete(destination_input);
 const autocomplete_source = new google.maps.places.Autocomplete(source_input);
 
-
 // Bind the map's bounds (viewport) property to the autocomplete object,
 // so that the autocomplete requests use the current map bounds for the
 // bounds option in the request.
 autocomplete.bindTo("bounds", map);
 
-
 // auto call after change mode
 
 document.getElementById("mode").addEventListener("change", () => {
-  calculateAndDisplayRoute(directionsService, directionsRenderer, source,destination);
+  calculateAndDisplayRoute(
+    directionsService,
+    directionsRenderer,
+    source,
+    destination
+  );
 });
 
 // set the rounting passing source and destination
-function calculateAndDisplayRoute(directionsService, directionsRenderer,source,destination) {
-  document.getElementById("startbtn").classList.remove("hidden");;
+function calculateAndDisplayRoute(
+  directionsService,
+  directionsRenderer,
+  source,
+  destination
+) {
+  document.getElementById("startbtn").classList.remove("hidden");
   const selectedMode = document.getElementById("mode").value;
 
   directionsService
@@ -40,14 +48,10 @@ function calculateAndDisplayRoute(directionsService, directionsRenderer,source,d
     .catch((e) => window.alert("Directions is not avaliable"));
 }
 
-
 const marker = new google.maps.Marker({
   map,
   anchorPoint: new google.maps.Point(0, -29),
 });
-
-
-
 
 autocomplete.addListener("place_changed", () => {
   marker.setVisible(false);
@@ -67,10 +71,15 @@ autocomplete.addListener("place_changed", () => {
     directionsRenderer.setMap(map);
     destination = place.geometry.location;
     if (document.getElementById("source").value == "Current Location") {
-        source = current_pos;      
+      source = current_pos;
     }
-    if(source){
-      calculateAndDisplayRoute(directionsService, directionsRenderer, source ,destination);
+    if (source) {
+      calculateAndDisplayRoute(
+        directionsService,
+        directionsRenderer,
+        source,
+        destination
+      );
     }
   } else {
     map.setCenter(place.geometry.location);
@@ -80,7 +89,6 @@ autocomplete.addListener("place_changed", () => {
   marker.setPosition(place.geometry.location);
   marker.setVisible(true);
 });
-
 
 autocomplete_source.addListener("place_changed", () => {
   marker.setVisible(false);
@@ -102,10 +110,15 @@ autocomplete_source.addListener("place_changed", () => {
     directionsRenderer.setMap(map);
     source = place.geometry.location;
     if (document.getElementById("destination").value == "Current Location") {
-      destination = current_pos;      
+      destination = current_pos;
     }
     if (destination) {
-      calculateAndDisplayRoute(directionsService, directionsRenderer, place.geometry.location ,destination);
+      calculateAndDisplayRoute(
+        directionsService,
+        directionsRenderer,
+        place.geometry.location,
+        destination
+      );
     }
   } else {
     map.setCenter(place.geometry.location);
@@ -115,3 +128,15 @@ autocomplete_source.addListener("place_changed", () => {
   marker.setPosition(place.geometry.location);
   marker.setVisible(true);
 });
+
+// creating link for route
+
+function goNext() {
+  // longitude and latitude of source and destination upto 4 decimal places
+  src_lat = source.lat().toFixed(4);
+  src_lng = source.lng().toFixed(4);
+  dest_lat = destination.lat().toFixed(4);
+  dest_lng = destination.lng().toFixed(4);
+  window.location.href =
+    "route/routing/" + src_lat + "/" + src_lng + "/" + dest_lat + "/" + dest_lng;
+}
