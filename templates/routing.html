@@ -156,8 +156,12 @@
             }
         }
 
-
-        
+        function goNext(){
+            localStorage.clear();
+            localStorage.setItem("source", JSON.stringify(source));
+            localStorage.setItem("destination", JSON.stringify(destination));
+            window.location.href = '/route/'+source.lat+'/'+source.lng;
+        }
         
      </script>
      <script src="{% static 'js/searchloc.js' %}"></script>
