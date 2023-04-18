@@ -133,10 +133,23 @@ autocomplete_source.addListener("place_changed", () => {
 
 function goNext() {
   // longitude and latitude of source and destination upto 4 decimal places
-  src_lat = source.lat().toFixed(4);
-  src_lng = source.lng().toFixed(4);
-  dest_lat = destination.lat().toFixed(4);
-  dest_lng = destination.lng().toFixed(4);
-  window.location.href =
-    "route/routing/" + src_lat + "/" + src_lng + "/" + dest_lat + "/" + dest_lng;
+  localStorage.clear();
+  localStorage.setItem("source", JSON.stringify(source));
+  localStorage.setItem("destination", JSON.stringify(destination));
+  if(source == current_pos){
+    src_lat = source.lat.toFixed(4);
+    src_lng = source.lng.toFixed(4);
+  }else{
+    src_lat = source.lat().toFixed(4);
+    src_lng = source.lng().toFixed(4);
+  }
+
+  if(destination == current_pos){
+    dest_lat = destination.lat.toFixed(4);
+    dest_lng = destination.lng.toFixed(4);
+  }else{
+      dest_lat = destination.lat().toFixed(4);
+      dest_lng = destination.lng().toFixed(4);
+  }
+  window.location.href = "route/routing/" + src_lat + "/" + src_lng + "/" + dest_lat + "/" + dest_lng;
 }
