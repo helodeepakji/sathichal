@@ -158,7 +158,10 @@
 
 
         function goNext(){
-            window.location.href = '/route';
+            localStorage.clear();
+            localStorage.setItem("source", JSON.stringify(source));
+            localStorage.setItem("destination", JSON.stringify(destination));
+            window.location.href = '/route/'+source.lat+'/'+source.lng;
         }
         
      </script>
