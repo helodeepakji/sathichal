@@ -155,17 +155,6 @@
                 );
             }
         }
-
-        function goNext(){
-            localStorage.clear();
-            localStorage.setItem("source", JSON.stringify(source));
-            localStorage.setItem("destination", JSON.stringify(destination));
-            src_lat = source.lat().toFixed(4);
-            src_lng = source.lng().toFixed(4);
-            dest_lat = destination.lat().toFixed(4);
-            dest_lng = destination.lng().toFixed(4);
-            window.location.href = "route/routing/" + src_lat + "/" + src_lng + "/" + dest_lat + "/" + dest_lng;
-        }
         
      </script>
      <script src="{% static 'js/searchloc.js' %}"></script>
