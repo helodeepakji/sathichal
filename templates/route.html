@@ -7,11 +7,33 @@
     <title>Document</title>
 </head>
 <body>
+    {{source.lat}}   {{source.lng}} <br>
+    {{destination.lat}}  {{destination.lng}}
     <script> 
         let source = localStorage.getItem("source");
         let destination = localStorage.getItem("destination");
         console.log(JSON.parse(source));
         console.log(JSON.parse(destination));
+    </script>
+    <script>
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/routing/'
+            + '{{source.lat}}/'
+            + '{{source.lng}}/'
+            + '{{destination.lat}}/'
+            + '{{destination.lng}}/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            console.log(data);
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
     </script>
 </body>
 </html>

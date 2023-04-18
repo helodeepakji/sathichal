@@ -11,5 +11,17 @@ def index(request):
         return redirect(loginfun)
  
 def routing(request, src_lat, src_lng, dest_lat, dest_lng):
-    print(src_lat, src_lng, dest_lat, dest_lng)
-    return JsonResponse({'src_lat': src_lat,'src_lng': src_lng,'dest_lat': dest_lat,'dest_lng': dest_lng,}, status=400)
+
+    source = {
+        'lat' : src_lat,
+        'lng' : src_lng,
+    }
+
+    destination = {
+        'lat' : dest_lat,
+        'lng' : dest_lng,
+    }
+
+    context = {"source":source,"destination":destination}
+
+    return render(request,"route.html",context)
