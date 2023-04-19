@@ -136,20 +136,21 @@ function goNext() {
   localStorage.clear();
   localStorage.setItem("source", JSON.stringify(source));
   localStorage.setItem("destination", JSON.stringify(destination));
+  
   if(source == current_pos){
-    src_lat = source.lat.toFixed(4);
-    src_lng = source.lng.toFixed(4);
+    src_lat = source.lat.toFixed(2);
+    src_lng = source.lng.toFixed(2);
   }else{
-    src_lat = source.lat().toFixed(4);
-    src_lng = source.lng().toFixed(4);
+    src_lat = source.lat().toFixed(2);
+    src_lng = source.lng().toFixed(2);
   }
 
   if(destination == current_pos){
-    dest_lat = destination.lat.toFixed(4);
-    dest_lng = destination.lng.toFixed(4);
+    dest_lat = destination.lat.toFixed(2);
+    dest_lng = destination.lng.toFixed(2);
   }else{
-      dest_lat = destination.lat().toFixed(4);
-      dest_lng = destination.lng().toFixed(4);
+      dest_lat = destination.lat().toFixed(2);
+      dest_lng = destination.lng().toFixed(2);
   }
   window.location.href = "route/routing/" + src_lat + "/" + src_lng + "/" + dest_lat + "/" + dest_lng;
 }
