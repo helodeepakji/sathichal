@@ -12,11 +12,14 @@
     <script> 
         let source = localStorage.getItem("source");
         let destination = localStorage.getItem("destination");
-        console.log(JSON.parse(source));
-        console.log(JSON.parse(destination));
+        var location_data = {
+            'source' : JSON.parse(source),
+            'destination' : JSON.parse(destination),
+        };
+        console.log(location_data);
     </script>
     <script>
-        const chatSocket = new WebSocket(
+        const routeSocket = new WebSocket(
             'ws://'
             + window.location.host
             + '/ws/routing/'
@@ -26,12 +29,19 @@
             + '{{destination.lng}}/'
         );
 
-        chatSocket.onmessage = function(e) {
+        routeSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             console.log(data);
+            if(data.type == 'connection'){
+                routeSocket.send(JSON.stringify({
+                    'type' : "user_location",
+                    'username' : "{{user}}",
+                    location_data,
+                }));
+            }
         };
 
-        chatSocket.onclose = function(e) {
+        routeSocket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');
         };
     </script>
