@@ -4,20 +4,93 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {% load static %}
     <title>Document</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ysabeau:wght@300&display=swap');
+        h3 {
+            font-family: 'Ysabeau', sans-serif;
+        }
+        .gm-style-mtc {
+            display: none;
+        }
+        .main_box {
+            font-family: 'Ysabeau', sans-serif;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+        }
+        .main_box .map_lay {
+            width: 70%;
+        }
+        .main_box .channel_lay {
+            width: 30%;
+        }
+
+        .main_box .map_lay .group {
+            height: 20%;
+        }
+
+        #map {
+            height: 80%;
+        }
+
+        .main_box .channel_lay .request_list {
+            height: 20%;
+        }
+
+        .main_box .channel_lay .user_list {
+            height: 80%;
+        }    
+
+    </style>
 </head>
 <body>
-    {{source.lat}}   {{source.lng}} <br>
-    {{destination.lat}}  {{destination.lng}}
+    {% include 'layout/navbar.html' %}
+
+
+    <div class="main_box">
+        <div class="map_lay">
+            <div class="group">
+                <h3>Group :</h3>
+            </div>
+            <div id="map"></div>
+        </div>
+        <div class="channel_lay">
+            <div class="request_list">
+                <h3>Request List :</h3>
+            </div>
+            <div class="user_list">
+                <h3>User List :</h3>
+            </div>
+        </div>
+    </div>
+    
+    {% comment %} {{source.lat}}   {{source.lng}} <br>
+    {{destination.lat}}  {{destination.lng}} {% endcomment %}
+
+    {% include 'layout/footer.html' %}
+
     <script> 
-        let source = localStorage.getItem("source");
-        let destination = localStorage.getItem("destination");
+        let source = JSON.parse(localStorage.getItem("source"));
+        let destination = JSON.parse(localStorage.getItem("destination"));
         var location_data = {
-            'source' : JSON.parse(source),
-            'destination' : JSON.parse(destination),
+            'source' : source,
+            'destination' : destination,
         };
         console.log(location_data);
     </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsZwc4NHo2JhjvtoFmv5N89u7Ta042KtE&libraries=places"></script>
+    <script>
+        const map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: {{source.lat}}, lng: {{source.lng}} },
+            zoom: 18,
+            scrollwheel: false,
+          });
+    </script>
+
     <script>
         const routeSocket = new WebSocket(
             'ws://'
@@ -38,6 +111,15 @@
                     'username' : "{{user}}",
                     location_data,
                 }));
+            }
+
+            if((data.type == 'auto') && (data.event = 'user_location')){
+                var marker = new google.maps.Marker({
+                    position: data.data.location.source,
+                    map: map,
+                    draggable: true
+                  });
+                  map.setCenter(data.data.location.source);
             }
         };
 
