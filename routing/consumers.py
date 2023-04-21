@@ -80,6 +80,7 @@ class routConsumer(AsyncWebsocketConsumer):
         if event['Event'] == 'user_location' :
             await self.send(text_data=json.dumps({
                     'type': 'auto',
+                    'event' : 'user_location',
                     'data': {
                         'username' : event['username'],
                         'location': event['location']
