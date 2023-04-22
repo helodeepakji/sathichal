@@ -2,6 +2,9 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth import authenticate
 from requests import request
+from home.models import sathiUser
+from channels.db import database_sync_to_async
+from asgiref.sync import sync_to_async , async_to_sync
 
 class routConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -67,7 +70,7 @@ class routConsumer(AsyncWebsocketConsumer):
 
     # Receive message from room group
     async def all_user(self, event):
-        print(event)
+        # print(event)
         if event['Event'] == 'connected' : 
         # Send message to WebSocket
             await self.send(text_data=json.dumps({
@@ -78,6 +81,11 @@ class routConsumer(AsyncWebsocketConsumer):
                 }))
             
         if event['Event'] == 'user_location' :
+            # user = database_sync_to_async(sathiUser.objects.get(username='sathi'))
+            # print(user)
+            username = await database_sync_to_async(self.get_user)(event['username']) 
+            print(username)
+
             await self.send(text_data=json.dumps({
                     'type': 'auto',
                     'event' : 'user_location',
@@ -86,3 +94,9 @@ class routConsumer(AsyncWebsocketConsumer):
                         'location': event['location']
                     }
                 }))
+            
+
+    def get_user(self,username):
+        user_data = sathiUser.objects.get(username = username)
+        print(user_data)
+        return 'json.dumps(user_data)'
