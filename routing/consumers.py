@@ -82,16 +82,15 @@ class routConsumer(AsyncWebsocketConsumer):
                 }))
             
         if event['Event'] == 'user_location' :
-            # user = database_sync_to_async(sathiUser.objects.get(username='sathi'))
-            # print(user)
-            username = await database_sync_to_async(self.get_user)(event['username']) 
-            print(username)
+            user_data = await database_sync_to_async(self.get_user)(event['username']) 
+            # print(user_data)
 
             await self.send(text_data=json.dumps({
                     'type': 'auto',
                     'event' : 'user_location',
                     'data': {
                         'username' : event['username'],
+                        'user_data' : user_data,
                         'location': event['location']
                     }
                 }))
@@ -106,4 +105,4 @@ class routConsumer(AsyncWebsocketConsumer):
         else:
             send_data = {'username':user_data[0].username,'first_name':user_data[0].first_name,'last_name':user_data[0].last_name,'profile_pic':None}
         
-        return json.dumps(send_data)
+        return send_data
