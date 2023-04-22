@@ -240,6 +240,8 @@
       }
 
       // send request to user
+      // if any error occur then comment this function
+      // this function is onclick event of send request button
       function sendRequest(username, channel_name) {
         console.log(username, channel_name);
         routeSocket.send(
