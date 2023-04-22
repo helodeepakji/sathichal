@@ -199,30 +199,38 @@
           } else {
             var user_img = user_data.profile_pic;
           }
-          let mem =
-            `
-                    <div class='user' id='` +
-            user_data.username +
-            `'>
-                        <img src="` +
-            user_img +
-            `" class="list-item-image" width="50px" height="50px">
-                        <div class="list-item-content">
+
+          // to prevent mutiple request from same user
+
+          const tempt_member = document.getElementById(user_data.username);
+          if (tempt_member) {
+            return;
+          } else {
+            let mem =
+              `
+                <div class='user' id='` +
+              user_data.username +
+              `'>
+            <img src="` +
+              user_img +
+              `" class="list-item-image" width="50px" height="50px">
+            <div class="list-item-content">
                             <h3>` +
-            user_data.first_name +
-            `  ` +
-            user_data.last_name +
-            `</h3>
+              user_data.first_name +
+              `  ` +
+              user_data.last_name +
+              `</h3>
                             <p>@` +
-            user_data.username +
-            `</p>
+              user_data.username +
+              `</p>
                         </div>
                         <button id="user_` +
-            user_data.username +
-            `"> Send Request </button>
-                    </div>
-                    `;
-          $("#userlist").append(mem);
+              user_data.username +
+              `"> Send Request </button>
+            </div>
+            `;
+            $("#userlist").append(mem);
+          }
         }
       }
     </script>
