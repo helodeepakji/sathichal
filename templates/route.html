@@ -1,204 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     {% load static %}
     <title>Document</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Ysabeau:wght@300&display=swap');
-        h3,p{
-            font-family: 'Ysabeau', sans-serif;
-        }
-        .gm-style-mtc {
-            display: none;
-        }
-        .main_box {
-            font-family: 'Ysabeau', sans-serif;
-            height: 100vh;
-            width: 100%;
-            display: flex;
-        }
-        .main_box .map_lay {
-            width: 70%;
-        }
-        .main_box .channel_lay {
-            width: 30%;
-        }
+      @import url("https://fonts.googleapis.com/css2?family=Ysabeau:wght@300&display=swap");
+      h3,
+      p {
+        font-family: "Ysabeau", sans-serif;
+      }
+      .gm-style-mtc {
+        display: none;
+      }
+      .main_box {
+        font-family: "Ysabeau", sans-serif;
+        height: 100vh;
+        width: 100%;
+        display: flex;
+      }
+      .main_box .map_lay {
+        width: 70%;
+      }
+      .main_box .channel_lay {
+        width: 30%;
+      }
 
-        .main_box .map_lay .group {
-            height: 20%;
-        }
+      .main_box .map_lay .group {
+        height: 20%;
+      }
 
-        #map {
-            height: 80%;
-        }
+      #map {
+        height: 80%;
+      }
 
-        .main_box .channel_lay .request_list {
-            height: 20%;
-        }
+      .main_box .channel_lay .request_list {
+        height: 20%;
+      }
 
-        .main_box .channel_lay .user_list {
-            height: 80%;
-            overflow: scroll;
-        }    
+      .main_box .channel_lay .user_list {
+        height: 80%;
+        overflow: scroll;
+      }
 
-        .user_list .userlist .user {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-            border-bottom: 1px solid gray;
-            border-top: 1px solid gray;
-        }
+      .user_list .userlist .user {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        border-bottom: 1px solid gray;
+        border-top: 1px solid gray;
+      }
 
-        .userlist img {
-            border-radius: 50%;
-            object-fit: cover;
-        }
+      .userlist img {
+        border-radius: 50%;
+        object-fit: cover;
+      }
 
-        .list-item-content {
-            width: 100%;
-            margin-left: 20px;
-        }
+      .list-item-content {
+        width: 100%;
+        margin-left: 20px;
+      }
 
-        .head {
-            padding: 20px;
-            background: black;
-            color: white;
-        }
+      .head {
+        padding: 20px;
+        background: black;
+        color: white;
+      }
 
-        .userlist button {
-            padding: 5px 10px;
-            color: white;
-            background: black;
-            border: none;
-            border-radius: 10px;
-            border: 1px solid;
-            font-family: 'Ysabeau', sans-serif;
-            font-weight: 900;
-        }
+      .userlist button {
+        padding: 5px 10px;
+        color: white;
+        background: black;
+        border: none;
+        border-radius: 10px;
+        border: 1px solid;
+        font-family: "Ysabeau", sans-serif;
+        font-weight: 900;
+      }
 
-        .userlist button:hover{
-            color: black;
-            background: white;
-        }
-
+      .userlist button:hover {
+        color: black;
+        background: white;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     {% include 'layout/navbar.html' %}
 
-
     <div class="main_box">
-        <div class="map_lay">
-            <div class="group">
-                <div class="head"><h3>Group :</h3></div>
-                
-            </div>
-            <div id="map"></div>
+      <div class="map_lay">
+        <div class="group">
+          <div class="head"><h3>Group :</h3></div>
         </div>
-        <div class="channel_lay">
-            <div class="request_list">
-                <div class="head"><h3>Request List :</h3></div>
-
-            </div>
-            <div class="user_list">
-                <div class="head"><h3>User List :</h3></div>
-                <div class="userlist" id="userlist">
-
-                </div>
-            </div>
+        <div id="map"></div>
+      </div>
+      <div class="channel_lay">
+        <div class="request_list">
+          <div class="head"><h3>Request List :</h3></div>
         </div>
+        <div class="user_list">
+          <div class="head"><h3>User List :</h3></div>
+          <div class="userlist" id="userlist"></div>
+        </div>
+      </div>
     </div>
-    
-    {% comment %} {{source.lat}}   {{source.lng}} <br>
-    {{destination.lat}}  {{destination.lng}} {% endcomment %}
 
-    {% include 'layout/footer.html' %}
+    {% comment %} {{source.lat}} {{source.lng}} <br />
+    {{destination.lat}} {{destination.lng}} {% endcomment %} {% include
+    'layout/footer.html' %}
 
-    <script> 
-        let source = JSON.parse(localStorage.getItem("source"));
-        let destination = JSON.parse(localStorage.getItem("destination"));
-        var location_data = {
-            'source' : source,
-            'destination' : destination,
-        };
-        console.log(location_data);
+    <script>
+      let source = JSON.parse(localStorage.getItem("source"));
+      let destination = JSON.parse(localStorage.getItem("destination"));
+      var location_data = {
+        source: source,
+        destination: destination,
+      };
+      console.log(location_data);
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsZwc4NHo2JhjvtoFmv5N89u7Ta042KtE&libraries=places"></script>
     <script>
-        const map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: {{source.lat}}, lng: {{source.lng}} },
-            zoom: 18,
-            scrollwheel: false,
-          });
+      const map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: {{source.lat}}, lng: {{source.lng}} },
+          zoom: 18,
+          scrollwheel: false,
+        });
     </script>
 
     <script>
-        const routeSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/routing/'
-            + '{{source.lat}}/'
-            + '{{source.lng}}/'
-            + '{{destination.lat}}/'
-            + '{{destination.lng}}/'
-        );
+      const routeSocket = new WebSocket(
+        "ws://" +
+          window.location.host +
+          "/ws/routing/" +
+          "{{source.lat}}/" +
+          "{{source.lng}}/" +
+          "{{destination.lat}}/" +
+          "{{destination.lng}}/"
+      );
 
-        routeSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            console.log(data);
-            if(data.type == 'connection'){
-                routeSocket.send(JSON.stringify({
-                    'type' : "user_location",
-                    'username' : "{{user}}",
-                    location_data,
-                }));
-            }
+      routeSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        console.log(data);
+        if (data.type == "connection") {
+          routeSocket.send(
+            JSON.stringify({
+              type: "user_location",
+              username: "{{user}}",
+              location_data,
+            })
+          );
+        }
+        // marker title
+        var infoWindow = new google.maps.InfoWindow();
 
-            if((data.type == 'auto') && (data.event = 'user_location')){
-                var marker = new google.maps.Marker({
-                    position: data.data.location.source,
-                    map: map,
-                    draggable: true
-                  });
-                  map.setCenter(data.data.location.source);
-                  addUserlist(data.data.user_data);
-            }
-        };
+        if (data.type == "auto" && (data.event = "user_location")) {
+          var marker = new google.maps.Marker({
+            position: data.data.location.source,
+            map: map,
+            draggable: true,
+          });
+          map.setCenter(data.data.location.source);
+          addUserlist(data.data.user_data);
+          //   set infoWindow content when page load
+          infoWindow.setContent(
+            '<div style="font-weight:bold;">' + data.data.username + "</div>"
+          );
+          infoWindow.open(map, marker);
+          //   show infoWindow on mouseover event
+          const temp_map = infoWindow.getMap();
+          marker.addListener("mouseover", () => {
+            infoWindow.open(map, marker);
+          });
+        }
+      };
 
-        routeSocket.onclose = function(e) {
-            console.error('Chat socket closed unexpectedly');
-        };
+      routeSocket.onclose = function (e) {
+        console.error("Chat socket closed unexpectedly");
+      };
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
-        function addUserlist(user_data){
-            if(user_data.username != "{{user}}"){
-                if(user_data.profile_pic == null){
-                    var user_img = "{% static 'images/profile.jpg' %}";
-                }else{
-                    var user_img = user_data.profile_pic;
-                }
-                let mem =
-                    `
-                    <div class='user' id='`+user_data.username+`'>
-                        <img src="`+user_img+`" class="list-item-image" width="50px" height="50px">
+      function addUserlist(user_data) {
+        if (user_data.username != "{{user}}") {
+          if (user_data.profile_pic == null) {
+            var user_img = "{% static 'images/profile.jpg' %}";
+          } else {
+            var user_img = user_data.profile_pic;
+          }
+          let mem =
+            `
+                    <div class='user' id='` +
+            user_data.username +
+            `'>
+                        <img src="` +
+            user_img +
+            `" class="list-item-image" width="50px" height="50px">
                         <div class="list-item-content">
-                            <h3>`+user_data.first_name+`  `+user_data.last_name+`</h3>
-                            <p>@`+user_data.username+`</p>
+                            <h3>` +
+            user_data.first_name +
+            `  ` +
+            user_data.last_name +
+            `</h3>
+                            <p>@` +
+            user_data.username +
+            `</p>
                         </div>
-                        <button id="user_`+user_data.username+`"> Send Request </button>
+                        <button id="user_` +
+            user_data.username +
+            `"> Send Request </button>
                     </div>
                     `;
-                $("#userlist").append(mem);
-            }
+          $("#userlist").append(mem);
         }
+      }
     </script>
-</body>
+  </body>
 </html>

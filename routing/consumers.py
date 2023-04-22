@@ -67,8 +67,6 @@ class routConsumer(AsyncWebsocketConsumer):
 
 
 
-
-
     # Receive message from room group
     async def all_user(self, event):
         # print(event)
