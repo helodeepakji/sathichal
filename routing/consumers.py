@@ -5,6 +5,7 @@ from requests import request
 from home.models import sathiUser
 from channels.db import database_sync_to_async
 from asgiref.sync import sync_to_async , async_to_sync
+from django.core import serializers
 
 class routConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -97,6 +98,12 @@ class routConsumer(AsyncWebsocketConsumer):
             
 
     def get_user(self,username):
-        user_data = sathiUser.objects.get(username = username)
-        print(user_data)
-        return 'json.dumps(user_data)'
+        user_data = sathiUser.objects.filter(username = username)
+
+        if user_data[0].profile_pic:
+            send_data = {'username':user_data[0].username,'first_name':user_data[0].first_name,'last_name':user_data[0].last_name,'profile_pic':user_data[0].profile_pic.url}
+        # if user profile pic is not set then send None
+        else:
+            send_data = {'username':user_data[0].username,'first_name':user_data[0].first_name,'last_name':user_data[0].last_name,'profile_pic':None}
+        
+        return json.dumps(send_data)
