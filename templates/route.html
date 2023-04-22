@@ -201,8 +201,8 @@
           }
 
           // to prevent mutiple request from same user
-
           const tempt_member = document.getElementById(user_data.username);
+          // if user is already in the list then return
           if (tempt_member) {
             return;
           } else {
@@ -226,12 +226,30 @@
                         </div>
                         <button id="user_` +
               user_data.username +
+              `" onclick="sendRequest('` +
+              user_data.username +
+              `',` +`'`+
+              user_data.channel_name +
+              `')` +
               `"> Send Request </button>
             </div>
             `;
             $("#userlist").append(mem);
           }
         }
+      }
+
+      // send request to user
+      function sendRequest(username, channel_name) {
+        console.log(username, channel_name);
+        routeSocket.send(
+          JSON.stringify({
+            type: "request",
+            from_username: "{{user}}",
+            to_username: username,
+            channel_name: channel_name,
+          })
+        );
       }
     </script>
   </body>

@@ -55,7 +55,7 @@ class routConsumer(AsyncWebsocketConsumer):
         # print(text_data_json)
 
         eventType = text_data_json['type']
-
+        
         if eventType == 'user_location':
             name = text_data_json['username']
             user_location = text_data_json['location_data']
@@ -64,6 +64,15 @@ class routConsumer(AsyncWebsocketConsumer):
             )
 
         # write code here
+        
+        # for request incompelete
+        
+        # if eventType == 'request':
+        #     to_name = text_data_json['to_username']
+        #     from_name = text_data_json['from_username']
+        #     channel_name = text_data_json['channel_name']
+        #     await self.send(channel_name=channel_name,text_data=json.dumps({'Event':'request','data':{'to_username':to_name,'from_username':from_name,'channel_name':channel_name}}))
+            
 
 
 
@@ -98,9 +107,9 @@ class routConsumer(AsyncWebsocketConsumer):
         user_data = sathiUser.objects.filter(username = username)
 
         if user_data[0].profile_pic:
-            send_data = {'username':user_data[0].username,'first_name':user_data[0].first_name,'last_name':user_data[0].last_name,'profile_pic':user_data[0].profile_pic.url}
+            send_data = {'username':user_data[0].username,'first_name':user_data[0].first_name,'last_name':user_data[0].last_name,'profile_pic':user_data[0].profile_pic.url,'channel_name':self.channel_name}
         # if user profile pic is not set then send None
         else:
-            send_data = {'username':user_data[0].username,'first_name':user_data[0].first_name,'last_name':user_data[0].last_name,'profile_pic':None}
+            send_data = {'username':user_data[0].username,'first_name':user_data[0].first_name,'last_name':user_data[0].last_name,'profile_pic':None,'channel_name':self.channel_name}
         
         return send_data
