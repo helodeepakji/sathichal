@@ -69,6 +69,13 @@ class routConsumer(AsyncWebsocketConsumer):
             )
 
 
+        if eventType == 'success':
+            name = text_data_json['username']
+            user_location = text_data_json['location_data']
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "all_user","Event": "success","username" : name, "location": user_location}
+            )
+
 
 
 
@@ -101,6 +108,21 @@ class routConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                     'type': 'auto',
                     'event' : 'user_location',
+                    'data': {
+                        'username' : event['username'],
+                        'user_data' : user_data,
+                        'location': event['location']
+                    }
+                }))
+
+
+        #when success all users    
+        if event['Event'] == 'success' :
+            user_data = await database_sync_to_async(self.get_user)(event['username']) 
+            # print(user_data)
+
+            await self.send(text_data=json.dumps({
+                    'type': 'success',
                     'data': {
                         'username' : event['username'],
                         'user_data' : user_data,

@@ -177,6 +177,16 @@
                   addUserlist(data.data.user_data);
             }
 
+            if(data.type == 'success'){
+                var marker = new google.maps.Marker({
+                    position: data.data.location.source,
+                    map: map,
+                    draggable: true
+                  });
+                map.setCenter(data.data.location.source);
+                addExistlist(data.data.user_data);
+            }
+
             if(data.type == 'sendRequest'){
                 addRequest(data.data);
             }
@@ -194,13 +204,47 @@
                 'sender' : "{{user}}"
             }));
             removeUserlist(username);
-          }
+        }
+
+
+        function sendConfirm(username) {
+            console.log("Confirm "+username);
+            removeRequest(username);
+        }
+
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
 
         function addUserlist(user_data){
+            if(user_data.username != "{{user}}"){
+                if(user_data.profile_pic == null){
+                    var user_img = "{% static 'images/profile.jpg' %}";
+                }else{
+                    var user_img = user_data.profile_pic;
+                }
+                let mem =
+                    `
+                    <div class='user' id='`+user_data.username+`'>
+                        <img src="`+user_img+`" class="list-item-image" width="50px" height="50px">
+                        <div class="list-item-content">
+                            <h3>`+user_data.first_name+`  `+user_data.last_name+`</h3>
+                            <p>@`+user_data.username+`</p>
+                        </div>
+                        <button id="user_`+user_data.username+`" onclick="sendRequest('`+ user_data.username +`')"> Send Request </button>
+                    </div>
+                    `;
+                $("#userlist").append(mem);
+                routeSocket.send(JSON.stringify({
+                    'type' : "success",
+                    'username' : "{{user}}",
+                    location_data,
+                }));
+            }
+        }
+
+        function addExistlist(user_data){
             if(user_data.username != "{{user}}"){
                 if(user_data.profile_pic == null){
                     var user_img = "{% static 'images/profile.jpg' %}";
@@ -235,7 +279,7 @@
                 }
                 let mem =
                     `
-                    <div class='user' id='`+user_data.user_data.username+`'>
+                    <div class='user' id='req_`+user_data.user_data.username+`'>
                         <img src="`+user_img+`" class="list-item-image" width="50px" height="50px">
                         <div class="list-item-content">
                             <h3>`+user_data.user_data.first_name+`  `+user_data.user_data.last_name+`</h3>
@@ -245,7 +289,12 @@
                     </div>
                     `;
                 $("#requestlist").append(mem);
+                removeUserlist(user_data.user_data.username);
             }
+        }
+
+        function removeRequest(user_data){
+            $("#req_"+user_data).remove();
         }
 
     </script>
