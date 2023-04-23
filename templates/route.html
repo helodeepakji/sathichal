@@ -37,11 +37,12 @@
         }
 
         .main_box .channel_lay .request_list {
-            height: 20%;
+            height: 50%;
+            overflow: scroll;
         }
 
         .main_box .channel_lay .user_list {
-            height: 80%;
+            height: 50%;
             overflow: scroll;
         }    
 
@@ -165,6 +166,7 @@
 
             if(data.type == 'disconnected'){
                 removeUserlist(data.username);
+                removeRequest(data.username);
             }
 
             if((data.type == 'auto') && (data.event = 'user_location')){
@@ -182,7 +184,7 @@
                     position: data.data.location.source,
                     map: map,
                     draggable: true
-                  });
+                });
                 map.setCenter(data.data.location.source);
                 addExistlist(data.data.user_data);
             }
@@ -218,7 +220,8 @@
     <script>
 
         function addUserlist(user_data){
-            if(user_data.username != "{{user}}"){
+            var myEle = document.getElementById(user_data.username);
+            if((user_data.username != "{{user}}")&&(!myEle)){
                 if(user_data.profile_pic == null){
                     var user_img = "{% static 'images/profile.jpg' %}";
                 }else{
@@ -245,7 +248,8 @@
         }
 
         function addExistlist(user_data){
-            if(user_data.username != "{{user}}"){
+            var myEle = document.getElementById(user_data.username);
+            if((user_data.username != "{{user}}")&&(!myEle)){
                 if(user_data.profile_pic == null){
                     var user_img = "{% static 'images/profile.jpg' %}";
                 }else{
