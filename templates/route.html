@@ -45,7 +45,7 @@
             overflow: scroll;
         }    
 
-        .user_list .userlist .user {
+        .userlist .user {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -103,7 +103,9 @@
         <div class="channel_lay">
             <div class="request_list">
                 <div class="head"><h3>Request List :</h3></div>
+                <div class="userlist" id="requestlist">
 
+                </div>
             </div>
             <div class="user_list">
                 <div class="head"><h3>User List :</h3></div>
@@ -152,12 +154,17 @@
         routeSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             console.log(data);
+
             if(data.type == 'connection'){
                 routeSocket.send(JSON.stringify({
                     'type' : "user_location",
                     'username' : "{{user}}",
                     location_data,
                 }));
+            }
+
+            if(data.type == 'disconnected'){
+                removeUserlist(data.username);
             }
 
             if((data.type == 'auto') && (data.event = 'user_location')){
@@ -169,15 +176,30 @@
                   map.setCenter(data.data.location.source);
                   addUserlist(data.data.user_data);
             }
+
+            if(data.type == 'sendRequest'){
+                addRequest(data.data);
+            }
+
         };
 
         routeSocket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');
         };
+
+        function sendRequest(username) {
+            routeSocket.send(JSON.stringify({
+                'type' : 'sendRequest',
+                'reciver' : username,
+                'sender' : "{{user}}"
+            }));
+            removeUserlist(username);
+          }
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
+
         function addUserlist(user_data){
             if(user_data.username != "{{user}}"){
                 if(user_data.profile_pic == null){
@@ -193,12 +215,39 @@
                             <h3>`+user_data.first_name+`  `+user_data.last_name+`</h3>
                             <p>@`+user_data.username+`</p>
                         </div>
-                        <button id="user_`+user_data.username+`"> Send Request </button>
+                        <button id="user_`+user_data.username+`" onclick="sendRequest('`+ user_data.username +`')"> Send Request </button>
                     </div>
                     `;
                 $("#userlist").append(mem);
             }
         }
+
+        function removeUserlist(user_data){
+            $("#"+user_data).remove();
+        }
+
+        function addRequest(user_data){
+            if(user_data.reciver == '{{user}}'){
+                if(user_data.user_data.profile_pic == null){
+                    var user_img = "{% static 'images/profile.jpg' %}";
+                }else{
+                    var user_img = user_data.user_data.profile_pic;
+                }
+                let mem =
+                    `
+                    <div class='user' id='`+user_data.user_data.username+`'>
+                        <img src="`+user_img+`" class="list-item-image" width="50px" height="50px">
+                        <div class="list-item-content">
+                            <h3>`+user_data.user_data.first_name+`  `+user_data.user_data.last_name+`</h3>
+                            <p>@`+user_data.user_data.username+`</p>
+                        </div>
+                        <button id="user_`+user_data.user_data.username+`" onclick="sendConfirm('`+ user_data.user_data.username +`')"> Confirm </button>
+                    </div>
+                    `;
+                $("#requestlist").append(mem);
+            }
+        }
+
     </script>
 </body>
 </html>

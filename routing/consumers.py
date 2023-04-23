@@ -38,13 +38,11 @@ class routConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         print("socket is disconnect")
+        name = str(self.scope['user'])
+        await self.channel_layer.group_send(
+                self.room_group_name, {"type": "all_user","Event": "disconnected","username" : name}
+            )
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
-        await self.send(text_data=json.dumps({
-            'type': 'disconnection',
-            'data': {
-                'message': "Disconnected"
-            }
-        }))
 
 
 
@@ -56,6 +54,7 @@ class routConsumer(AsyncWebsocketConsumer):
 
         eventType = text_data_json['type']
 
+        # when type is user_location
         if eventType == 'user_location':
             name = text_data_json['username']
             user_location = text_data_json['location_data']
@@ -63,7 +62,12 @@ class routConsumer(AsyncWebsocketConsumer):
                 self.room_group_name, {"type": "all_user","Event": "user_location","username" : name, "location": user_location}
             )
 
-        # write code here
+        # when user send request
+        if eventType == 'sendRequest':
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "all_user","Event": "sendRequest","sender" : text_data_json['sender'], "reciver": text_data_json['reciver']}
+            )
+
 
 
 
@@ -72,8 +76,9 @@ class routConsumer(AsyncWebsocketConsumer):
     # Receive message from room group
     async def all_user(self, event):
         # print(event)
+
+        #when user is connected
         if event['Event'] == 'connected' : 
-        # Send message to WebSocket
             await self.send(text_data=json.dumps({
                     'type': 'auto',
                     'data': {
@@ -81,6 +86,14 @@ class routConsumer(AsyncWebsocketConsumer):
                     }
                 }))
             
+        #when user is disconnected
+        if event['Event'] == 'disconnected' : 
+            await self.send(text_data=json.dumps({
+                    'type': 'disconnected',
+                    'username': event['username']
+                }))
+            
+        #when share your location all users    
         if event['Event'] == 'user_location' :
             user_data = await database_sync_to_async(self.get_user)(event['username']) 
             # print(user_data)
@@ -94,7 +107,21 @@ class routConsumer(AsyncWebsocketConsumer):
                         'location': event['location']
                     }
                 }))
-            
+
+        #when user send request    
+        if event['Event'] == 'sendRequest' :
+            user_data = await database_sync_to_async(self.get_user)(event['sender']) 
+            # print(user_data)
+            await self.send(text_data=json.dumps({
+                    'type': 'sendRequest',
+                    'data': {
+                        'sender' : event['sender'],
+                        'user_data' : user_data,
+                        'reciver': event['reciver']
+                    }
+                }))
+
+
 
     def get_user(self,username):
         user_data = sathiUser.objects.filter(username = username)
