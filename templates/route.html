@@ -29,11 +29,11 @@
         }
 
         .main_box .map_lay .group {
-            height: 20%;
+            height: 25%;
         }
 
         #map {
-            height: 80%;
+            height: 75%;
         }
 
         .main_box .channel_lay .request_list {
@@ -87,6 +87,66 @@
             background: white;
         }
 
+        .stories-container {
+            display: flex;
+            flex: 74px;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 3px;
+            overflow-x: scroll;
+            user-select: none;
+       }
+        figure {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            margin: 0;
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+       }
+        figure > figcaption {
+            max-width: 74px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: system-ui, sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 16px;
+            text-align: center;
+            color: #262626;
+       }
+        figure:hover {
+            transform: scale(1.1);
+       }
+        picture {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(white 66%, transparent 0), linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            padding: 5px;
+            border-radius: 50%;
+       }
+        .personal {
+            background: none;
+       }
+        picture > img {
+            width: 64px;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border: 1px solid #b1b1b1;
+            border-radius: 50%;
+       }     
+
+       #group_per i {
+            position: fixed;
+            margin-left: 50px;
+            margin-top: -50px;
+            font-size: 20px;
+        }
+
     </style>
 </head>
 <body>
@@ -97,7 +157,8 @@
         <div class="map_lay">
             <div class="group">
                 <div class="head"><h3>Group :</h3></div>
-                
+                <div class="stories-container" id="group_per">
+                </div>
             </div>
             <div id="map"></div>
         </div>
@@ -177,6 +238,10 @@
                   });
                   map.setCenter(data.data.location.source);
                   addUserlist(data.data.user_data);
+
+                  if(data.data.user_data.username == '{{user}}'){
+                    addGroupMember(data.data.user_data.username,data.data.user_data.profile_pic);
+                  }
             }
 
             if(data.type == 'success'){
@@ -299,6 +364,34 @@
 
         function removeRequest(user_data){
             $("#req_"+user_data).remove();
+        }
+
+        function addGroupMember(username,profil_pic){
+            if(!profil_pic){
+                profil_pic = "{% static 'images/profile.jpg' %}";
+            }
+            if(username == '{{user}}'){
+                var pers = `
+                    <figure>
+                    <picture class="personal">
+                        <img src="`+profil_pic+`"/>
+                    </picture>
+                    <figcaption>{{user}}</figcaption>
+                </figure>
+                `;
+                $("#group_per").append(pers);
+            }else{
+                var pers = `
+                <figure>
+                    <picture>
+                        <i class="fas fa-times-circle"></i>
+                      <img src="`+profil_pic+`"/>
+                    </picture>
+                    <figcaption>`+username+`</figcaption>
+                  </figure>
+                `;
+                $("#group_per").append(pers);
+            }
         }
 
     </script>
