@@ -79,9 +79,9 @@ def loginfun(request):
         if user is not None:
             # login user
             login(request, user)
-            return JsonResponse({'message': 'User logged in successfully'}, status=200)
+            return redirect(index)
         else:
-            return JsonResponse({'message': 'Invalid credentials'}, status=400)
+            return redirect(loginfun)
     return render(request,"login.html")
 
 def signupfun(request):
@@ -130,9 +130,9 @@ def signupfun(request):
             # login user
             try:
                 login(request, newUser)
-                return JsonResponse({'message': 'User registered successfully'}, status=200)
+                return redirect(index)
             except:
-                return JsonResponse({'message': 'Error while registering user'}, status=400)
+                return redirect(signupfun)
             
     return render(request,"signup.html")
 
@@ -180,4 +180,4 @@ def profile(request):
             
             # else:
             #     sathiuser.phone = phone
-            return JsonResponse({'message': 'Profile updated successfully'}, status=200)
+            return redirect(profile)
