@@ -87,6 +87,9 @@ class routConsumer(AsyncWebsocketConsumer):
             # to save group
             created_group = group(group_name=self.room_group_name, added_by_user=text_data_json['sender'], added_user=text_data_json['reciver'], date=date, time=time)
             await database_sync_to_async(created_group.save)()
+
+            added_by_user = await database_sync_to_async(self.get_user)(text_data_json['sender']) 
+            added_user = await database_sync_to_async(self.get_user)(text_data_json['reciver']) 
             
             # to get group
             temp_group = await database_sync_to_async(list)(group.objects.filter(group_name=self.room_group_name,date = date))
@@ -108,7 +111,7 @@ class routConsumer(AsyncWebsocketConsumer):
             
             print(sendgroup)
             await self.channel_layer.group_send(
-                self.room_group_name, {"type": "all_user","Event": "confirmed","group":sendgroup}   
+                self.room_group_name, {"type": "all_user","Event": "confirmed","group":sendgroup,"sender":added_by_user,"reciver":added_user}   
             )
 
 
@@ -182,7 +185,9 @@ class routConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                     'type': 'confirmed',
                     'data': {
-                        'group' : event['group']
+                        'group' : event['group'],
+                        'added_by_user' : event['sender'],
+                        'added_user' : event['reciver']
                     }
                 }))
 
@@ -199,12 +204,7 @@ class routConsumer(AsyncWebsocketConsumer):
         
         return send_data
     
-    # get sathi
-    def get_sathi(self,username):
-        user_data = sathiUser.objects.get(username = username)
-        
-        return user_data
 
 
-# hellodeepakji
+# helodeepakji
 # deepak

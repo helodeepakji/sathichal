@@ -150,7 +150,7 @@
        #group_per i {
             position: fixed;
             margin-left: 50px;
-            margin-top: -50px;
+            margin-top: -70px;
             font-size: 20px;
         }
 
@@ -237,19 +237,19 @@
           removeRequest(data.username);
         }
 
-            if((data.type == 'auto') && (data.event = 'user_location')){
-                var marker = new google.maps.Marker({
-                    position: data.data.location.source,
-                    map: map,
-                    draggable: true
-                  });
-                  map.setCenter(data.data.location.source);
-                  addUserlist(data.data.user_data);
+        if((data.type == 'auto') && (data.event = 'user_location')){
+            var marker = new google.maps.Marker({
+                position: data.data.location.source,
+                map: map,
+                draggable: true
+              });
+              map.setCenter(data.data.location.source);
+              addUserlist(data.data.user_data);
 
-                  if(data.data.user_data.username == '{{user}}'){
-                    addGroupMember(data.data.user_data.username,data.data.user_data.profile_pic);
-                  }
-            }
+              if(data.data.user_data.username == '{{user}}'){
+                addGroupMember(data.data.user_data.username,data.data.user_data.profile_pic);
+              }
+        }
 
         if (data.type == "success") {
           var marker = new google.maps.Marker({
@@ -267,12 +267,20 @@
 
         if (data.type == "confirmed") {
           console.log(data);
+          if(data.data.added_by_user.username != "{{user}}"){
+            addGroupMember(data.data.added_by_user.username,data.data.added_by_user.profile_pic);
+          }
+          if(data.data.added_user.username != "{{user}}"){
+            addGroupMember(data.data.added_user.username,data.data.added_user.profile_pic);
+          }
         }
       };
 
       routeSocket.onclose = function (e) {
         console.error("Chat socket closed unexpectedly");
       };
+
+      //   send request to the user
 
       function sendRequest(username) {
         routeSocket.send(
@@ -311,27 +319,13 @@
           }
           let mem =
             `
-                    <div class='user' id='` +
-            user_data.username +
-            `'>
-                        <img src="` +
-            user_img +
-            `" class="list-item-image" width="50px" height="50px">
+                    <div class='user' id='` +user_data.username +`'>
+                        <img src="` +user_img +`" class="list-item-image" width="50px" height="50px">
                         <div class="list-item-content">
-                            <h3>` +
-            user_data.first_name +
-            `  ` +
-            user_data.last_name +
-            `</h3>
-                            <p>@` +
-            user_data.username +
-            `</p>
+                            <h3>` +user_data.first_name +`  ` +user_data.last_name +`</h3>
+                            <p>@` +user_data.username +`</p>
                         </div>
-                        <button id="user_` +
-            user_data.username +
-            `" onclick="sendRequest('` +
-            user_data.username +
-            `')"> Send Request </button>
+                        <button id="user_` +user_data.username +`" onclick="sendRequest('` +user_data.username + `')"> Send Request </button>
                     </div>
                     `;
           $("#userlist").append(mem);
