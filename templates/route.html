@@ -35,13 +35,13 @@
         width: 30%;
       }
 
-        .main_box .map_lay .group {
-            height: 25%;
-        }
+      .main_box .map_lay .group {
+        height: 25%;
+      }
 
-        #map {
-            height: 75%;
-        }
+      #map {
+        height: 75%;
+      }
 
       .main_box .channel_lay .request_list {
         height: 50%;
@@ -89,68 +89,76 @@
         font-weight: 900;
       }
 
-        .userlist button:hover{
-            color: black;
-            background: white;
-        }
+      .userlist button:hover {
+        color: black;
+        background: white;
+      }
 
-        .stories-container {
-            display: flex;
-            flex: 74px;
-            gap: 1rem;
-            padding: 1rem;
-            background: white;
-            border-radius: 3px;
-            overflow-x: scroll;
-            user-select: none;
-       }
-        figure {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            margin: 0;
-            transition: transform 0.2s ease-in-out;
-            cursor: pointer;
-       }
-        figure > figcaption {
-            max-width: 74px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-family: system-ui, sans-serif;
-            font-size: 12px;
-            font-weight: 400;
-            line-height: 16px;
-            text-align: center;
-            color: #262626;
-       }
-        figure:hover {
-            transform: scale(1.1);
-       }
-        picture {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: radial-gradient(white 66%, transparent 0), linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            padding: 5px;
-            border-radius: 50%;
-       }
-        .personal {
-            background: none;
-       }
-        picture > img {
-            width: 64px;
-            aspect-ratio: 1;
-            object-fit: cover;
-            border: 1px solid #b1b1b1;
-            border-radius: 50%;
-       }     
+      .stories-container {
+        display: flex;
+        flex: 74px;
+        gap: 1rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 3px;
+        overflow-x: scroll;
+        user-select: none;
+      }
+      figure {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        margin: 0;
+        transition: transform 0.2s ease-in-out;
+        cursor: pointer;
+      }
+      figure > figcaption {
+        max-width: 74px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-family: system-ui, sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 16px;
+        text-align: center;
+        color: #262626;
+      }
+      figure:hover {
+        transform: scale(1.1);
+      }
+      picture {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: radial-gradient(white 66%, transparent 0),
+          linear-gradient(
+            45deg,
+            #f09433 0%,
+            #e6683c 25%,
+            #dc2743 50%,
+            #cc2366 75%,
+            #bc1888 100%
+          );
+        padding: 5px;
+        border-radius: 50%;
+      }
+      .personal {
+        background: none;
+      }
+      picture > img {
+        width: 64px;
+        aspect-ratio: 1;
+        object-fit: cover;
+        border: 1px solid #b1b1b1;
+        border-radius: 50%;
+      }
 
        #group_per i {
             position: fixed;
             margin-left: 50px;
-            margin-top: -70px;
+            margin-top: -50px;
             font-size: 20px;
         }
 
@@ -160,33 +168,27 @@
     {% include 'layout/navbar.html' %}
 
     <div class="main_box">
-        <div class="map_lay">
-            <div class="group">
-                <div class="head"><h3>Group :</h3></div>
-                <div class="stories-container" id="group_per">
-                </div>
-            </div>
-            <div id="map"></div>
+      <div class="map_lay">
+        <div class="group">
+          <div class="head"><h3>Group :</h3></div>
+          <div class="stories-container" id="group_per"></div>
         </div>
-        <div class="channel_lay">
-            <div class="request_list">
-                <div class="head"><h3>Request List :</h3></div>
-                <div class="userlist" id="requestlist">
-
-                </div>
-            </div>
-            <div class="user_list">
-                <div class="head"><h3>User List :</h3></div>
-                <div class="userlist" id="userlist">
-
-                </div>
-            </div>
+        <div id="map"></div>
+      </div>
+      <div class="channel_lay">
+        <div class="request_list">
+          <div class="head"><h3>Request List :</h3></div>
+          <div class="userlist" id="requestlist"></div>
         </div>
+        <div class="user_list">
+          <div class="head"><h3>User List :</h3></div>
+          <div class="userlist" id="userlist"></div>
+        </div>
+      </div>
     </div>
 
-    {% comment %} {{source.lat}} {{source.lng}} <br />
-    {{destination.lat}} {{destination.lng}} {% endcomment %} {% include
-    'layout/footer.html' %}
+    <!-- prettier--ignore -->
+    {% include 'layout/footer.html' %}
 
     <script>
       let source = JSON.parse(localStorage.getItem("source"));
@@ -237,19 +239,19 @@
           removeRequest(data.username);
         }
 
-        if((data.type == 'auto') && (data.event = 'user_location')){
-            var marker = new google.maps.Marker({
-                position: data.data.location.source,
-                map: map,
-                draggable: true
-              });
-              map.setCenter(data.data.location.source);
-              addUserlist(data.data.user_data);
+            if((data.type == 'auto') && (data.event = 'user_location')){
+                var marker = new google.maps.Marker({
+                    position: data.data.location.source,
+                    map: map,
+                    draggable: true
+                  });
+                  map.setCenter(data.data.location.source);
+                  addUserlist(data.data.user_data);
 
-              if(data.data.user_data.username == '{{user}}'){
-                addGroupMember(data.data.user_data.username,data.data.user_data.profile_pic);
-              }
-        }
+                  if(data.data.user_data.username == '{{user}}'){
+                    addGroupMember(data.data.user_data.username,data.data.user_data.profile_pic);
+                  }
+            }
 
         if (data.type == "success") {
           var marker = new google.maps.Marker({
@@ -417,38 +419,45 @@
         }
       }
 
-        function removeRequest(user_data){
-            $("#req_"+user_data).remove();
-        }
+      function removeRequest(user_data) {
+        $("#req_" + user_data).remove();
+      }
 
-        function addGroupMember(username,profil_pic){
-            if(!profil_pic){
-                profil_pic = "{% static 'images/profile.jpg' %}";
-            }
-            if(username == '{{user}}'){
-                var pers = `
+      function addGroupMember(username, profil_pic) {
+        if (!profil_pic) {
+          profil_pic = "{% static 'images/profile.jpg' %}";
+        }
+        if (username == "{{user}}") {
+          var pers =
+            `
                     <figure>
                     <picture class="personal">
-                        <img src="`+profil_pic+`"/>
+                        <img src="` +
+            profil_pic +
+            `"/>
                     </picture>
                     <figcaption>{{user}}</figcaption>
                 </figure>
                 `;
-                $("#group_per").append(pers);
-            }else{
-                var pers = `
+          $("#group_per").append(pers);
+        } else {
+          var pers =
+            `
                 <figure>
                     <picture>
                         <i class="fas fa-times-circle"></i>
-                      <img src="`+profil_pic+`"/>
+                      <img src="` +
+            profil_pic +
+            `"/>
                     </picture>
-                    <figcaption>`+username+`</figcaption>
+                    <figcaption>` +
+            username +
+            `</figcaption>
                   </figure>
                 `;
-                $("#group_per").append(pers);
-            }
+          $("#group_per").append(pers);
         }
-
+      }
     </script>
   </body>
 </html>
