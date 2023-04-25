@@ -85,7 +85,7 @@ class routConsumer(AsyncWebsocketConsumer):
             time = datetime.now().time()
             
             # to save group
-            created_group = group(group_name=self.room_group_name, added_by_user=text_data_json['sender'], added_user=text_data_json['reciver'], date=date, time=time)
+            created_group = group(group_name=self.room_group_name, added_by_user=text_data_json['sender'], added_user=text_data_json['reciver'], status = 'P' ,date=date, time=time)
             await database_sync_to_async(created_group.save)()
 
             added_by_user = await database_sync_to_async(self.get_user)(text_data_json['sender']) 
