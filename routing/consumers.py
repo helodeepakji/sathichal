@@ -97,7 +97,7 @@ class routConsumer(AsyncWebsocketConsumer):
                 temp_obj = {}
                 timeDiff = datetime.combine(date.today(), i.time) - datetime.combine(date.today(), datetime.now().time())
                 timeDiffHours = timeDiff.days * 24 + timeDiff.seconds / 3600.0
-                if timeDiffHours < 1 and i.date == datetime.now().date():
+                if timeDiffHours < 1 and i.date == datetime.today():
                     temp_obj['added_by_user'] = i.added_by_user
                     temp_obj['added_user'] = i.added_user
                     temp_obj['date'] = str(i.date)
