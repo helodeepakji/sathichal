@@ -8,7 +8,7 @@ from asgiref.sync import sync_to_async , async_to_sync
 from django.core import serializers
 from home.models import sathiUser
 from .models import group
-from datetime import datetime
+from datetime import datetime,  timedelta
 class routConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         # username = str(self.scope['user'])
@@ -93,14 +93,20 @@ class routConsumer(AsyncWebsocketConsumer):
             
             # to get group
             temp_group = await database_sync_to_async(list)(group.objects.filter(group_name=self.room_group_name,date = date))
+            print(temp_group)
             sendgroup = []
             
             # for differece between time
             for i in temp_group:
                 temp_obj = {}
-                timeDiff = datetime.combine(date.today(), i.time) - datetime.combine(date.today(), datetime.now().time())
-                timeDiffHours = timeDiff.days * 24 + timeDiff.seconds / 3600.0
-                if timeDiffHours < 1 and i.date == datetime.today():
+                timeDiff = datetime.combine(datetime.today(), datetime.now().time()) - datetime.combine(datetime.today(), i.time)
+                print(timeDiff)
+                # print(type(datetime.now().time()),type(i.time))
+                print(timeDiff<timedelta(minutes=60) and i.date == datetime.now().date())
+                
+                # timeDiffHours = timeDiff.days * 24 + timeDiff.seconds / 3600.0
+                
+                if timeDiff <= timedelta(minutes=60) and i.date == datetime.now().date():
                     temp_obj['added_by_user'] = i.added_by_user
                     temp_obj['added_user'] = i.added_user
                     temp_obj['date'] = str(i.date)
