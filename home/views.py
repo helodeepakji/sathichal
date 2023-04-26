@@ -157,14 +157,15 @@ def profile(request):
             last_name = name.split(" ")[-1]
         else:
             last_name = ""
-        dob = request.POST['age']
+        sathiuser = sathiUser.objects.get(username=request.user)
+        dob = request.POST.get('age',sathiUser.dob)
         email = request.POST['email']
         phone = request.POST['phone']
         gov_id = request.POST['aadhar']
         city = request.POST['city']
         state = request.POST['state']
         profile = request.FILES.get('profile',None)
-        sathiuser = sathiUser.objects.get(username=request.user)
+        gender = request.POST['gender']
         if sathiuser:
             sathiuser.first_name = first_name
             sathiuser.last_name = last_name
@@ -174,10 +175,11 @@ def profile(request):
             sathiuser.city = city
             sathiuser.state = state
             sathiuser.profile_pic = profile
+            sathiUser.gender = gender
             sathiuser.save()
             # if sathiuser.phone != phone:
             #     #verify phone number
             
             # else:
             #     sathiuser.phone = phone
-            return redirect(profile)
+        return render(request,"profile.html",{"data":sathiuser})
