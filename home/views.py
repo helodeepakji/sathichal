@@ -15,7 +15,7 @@ userOtp = otp_handler()
 
 def ajaxfile(request):
     phone = request.POST['phone']
-    print(phone)
+    # print(phone)
     
     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_ACCOUNT_AUTH_TOKEN)
     print(userOtp)
@@ -158,7 +158,9 @@ def profile(request):
         else:
             last_name = ""
         sathiuser = sathiUser.objects.get(username=request.user)
-        dob = request.POST.get('age',sathiUser.dob)
+        dob = request.POST['age']
+        if dob == "":
+            dob = sathiuser.dob
         email = request.POST['email']
         phone = request.POST['phone']
         gov_id = request.POST['aadhar']
@@ -166,17 +168,10 @@ def profile(request):
         state = request.POST['state']
         profile = request.FILES.get('profile',None)
         gender = request.POST['gender']
+        # update user details
         if sathiuser:
-            sathiuser.first_name = first_name
-            sathiuser.last_name = last_name
-            sathiuser.dob = dob
-            sathiuser.email = email
-            sathiuser.aadhaarno = gov_id
-            sathiuser.city = city
-            sathiuser.state = state
-            sathiuser.profile_pic = profile
-            sathiUser.gender = gender
-            sathiuser.save()
+            sathiUser.objects.filter(username=request.user).update(first_name=first_name,last_name=last_name,email=email,phone=phone,dob=dob,aadhaarno=gov_id,city=city,state=state,profile_pic=profile,gender=gender)
+            
             # if sathiuser.phone != phone:
             #     #verify phone number
             
