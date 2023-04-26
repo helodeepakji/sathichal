@@ -78,17 +78,19 @@
         color: white;
       }
 
+      .getStartBtn button,
       .userlist button {
-        padding: 5px 10px;
+        padding: 12px 15px;
         color: white;
         background: black;
         border: none;
-        border-radius: 10px;
+        border-radius: 20px;
         border: 1px solid;
         font-family: "Ysabeau", sans-serif;
         font-weight: 900;
       }
 
+      .getStartBtn button:hover,
       .userlist button:hover {
         color: black;
         background: white;
@@ -162,6 +164,11 @@
             font-size: 20px;
         }
 
+        .groupdetail {
+          display: flex;
+          align-items: center;
+      }
+
     </style>
   </head>
   <body>
@@ -171,7 +178,10 @@
       <div class="map_lay">
         <div class="group">
           <div class="head"><h3>Group :</h3></div>
-          <div class="stories-container" id="group_per"></div>
+          <div class="groupdetail">
+            <div class="stories-container" id="group_per"></div>
+            <div class="getStartBtn"><Button>Start Now</Button></div>
+          </div>
         </div>
         <div id="map"></div>
       </div>
