@@ -4,11 +4,12 @@ from django.contrib.auth import authenticate
 from requests import request
 from home.models import sathiUser
 from channels.db import database_sync_to_async
-from asgiref.sync import sync_to_async , async_to_sync
-from django.core import serializers
+# from asgiref.sync import sync_to_async , async_to_sync
+# from django.core import serializers
 from home.models import sathiUser
 from .models import group
 from datetime import datetime,  timedelta
+import random
 class routConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         # username = str(self.scope['user'])
@@ -83,16 +84,25 @@ class routConsumer(AsyncWebsocketConsumer):
             
             date = datetime.now().date()
             time = datetime.now().time()
+            sathiid = text_data_json['sathiID']
+            # if sathi id is not empty
+            if sathiid == '':
+                sathiid = "SATHI"+str(random.randint(10000, 99999))
+                # if sathi id is already exist
+                while database_sync_to_async(group.objects.filter(sath_id=sathiid).exists)():
+                    sathiid = "SATHI"+str(random.randint(10000, 99999))
             
             # to save group
-            created_group = group(group_name=self.room_group_name, added_by_user=text_data_json['sender'], added_user=text_data_json['reciver'], status = 'P' ,date=date, time=time)
+            created_group = group(group_name=self.room_group_name, added_by_user=text_data_json['sender'], added_user=text_data_json['reciver'], status = 'P' ,date=date, time=time, sath_id=sathiid)
             await database_sync_to_async(created_group.save)()
+            
+            
 
             added_by_user = await database_sync_to_async(self.get_user)(text_data_json['sender']) 
             added_user = await database_sync_to_async(self.get_user)(text_data_json['reciver']) 
             
             # to get group
-            temp_group = await database_sync_to_async(list)(group.objects.filter(group_name=self.room_group_name,date = date))
+            temp_group = await database_sync_to_async(list)(group.objects.filter(group_name=self.room_group_name,date = date, status = 'P'))
             print(temp_group)
             sendgroup = []
             
@@ -106,12 +116,13 @@ class routConsumer(AsyncWebsocketConsumer):
                 
                 # timeDiffHours = timeDiff.days * 24 + timeDiff.seconds / 3600.0
                 
-                if timeDiff <= timedelta(minutes=60) and i.date == datetime.now().date():
+                if timeDiff <= timedelta(minutes=60) and i.date == datetime.now().date() and i.status == 'P':
                     temp_obj['added_by_user'] = i.added_by_user
                     temp_obj['added_user'] = i.added_user
                     temp_obj['date'] = str(i.date)
                     temp_obj['time'] = str(i.time)
                     temp_obj['group_name'] = i.group_name
+                    temp_obj['sath_id'] = i.sath_id
                     sendgroup.append(temp_obj)
             
             
