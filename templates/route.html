@@ -283,19 +283,8 @@
 
         if (data.type == "confirmed") {
           console.log(data);
-          sathiId = data.data.sathiId;
-          if (data.data.added_by_user.username != "{{user}}") {
-            addGroupMember(
-              data.data.added_by_user.username,
-              data.data.added_by_user.profile_pic
-            );
-          }
-          if (data.data.added_user.username != "{{user}}") {
-            addGroupMember(
-              data.data.added_user.username,
-              data.data.added_user.profile_pic
-            );
-          }
+          sathiId = data.Sathi_Id;
+          console.log(sathiId);
         }
       };
 

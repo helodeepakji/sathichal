@@ -133,7 +133,7 @@ class routConsumer(AsyncWebsocketConsumer):
             
             print(sendgroup)
             await self.channel_layer.group_send(
-                self.room_group_name, {"type": "all_user","Event": "confirmed","group":sendgroup,"sender":added_by_user,"reciver":added_user}   
+                self.room_group_name, {"type": "all_user","Event": "confirmed","group":sendgroup,"sender":added_by_user,"reciver":added_user,"Sathi_Id" : sathiid}   
             )
 
 
@@ -210,7 +210,8 @@ class routConsumer(AsyncWebsocketConsumer):
                         'group' : event['group'],
                         'added_by_user' : event['sender'],
                         'added_user' : event['reciver']
-                    }
+                    },
+                    'Sathi_Id' : event['Sathi_Id']
                 }))
 
 
