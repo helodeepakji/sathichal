@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from requests import request
 from home.models import sathiUser
 from channels.db import database_sync_to_async
+from django.db.models import Q
 # from asgiref.sync import sync_to_async , async_to_sync
 # from django.core import serializers
 from home.models import sathiUser
@@ -88,21 +89,25 @@ class routConsumer(AsyncWebsocketConsumer):
             # if sathi id is not empty
             if sathiid == '':
                 sathiid = "SATHI"+str(random.randint(10000, 99999))
+                is_sathi_id = await database_sync_to_async(group.objects.filter(sath_id=sathiid).exists)()
+                print("is sathi id",is_sathi_id)
                 # if sathi id is already exist
-                while database_sync_to_async(group.objects.filter(sath_id=sathiid).exists)():
+                while is_sathi_id == True:
+                    print("sathi id",sathiid)
                     sathiid = "SATHI"+str(random.randint(10000, 99999))
+            
             
             # to save group
             created_group = group(group_name=self.room_group_name, added_by_user=text_data_json['sender'], added_user=text_data_json['reciver'], status = 'P' ,date=date, time=time, sath_id=sathiid)
             await database_sync_to_async(created_group.save)()
             
-            
+            print("group created",created_group)
 
             added_by_user = await database_sync_to_async(self.get_user)(text_data_json['sender']) 
             added_user = await database_sync_to_async(self.get_user)(text_data_json['reciver']) 
             
             # to get group
-            temp_group = await database_sync_to_async(list)(group.objects.filter(group_name=self.room_group_name,date = date, status = 'P'))
+            temp_group = await database_sync_to_async(list)(group.objects.filter(Q(added_by_user = text_data_json['sender']) | Q(added_by_user = text_data_json['sender']),group_name=self.room_group_name,date = date, status = 'P'))
             print(temp_group)
             sendgroup = []
             

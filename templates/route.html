@@ -229,7 +229,7 @@
           "{{destination.lng}}/"
       );
 
-      var sathiId = '';
+      var sathiId = "";
 
       routeSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
@@ -324,7 +324,7 @@
             type: "sendConfirm",
             reciver: username,
             sender: "{{user}}",
-            sathiId: sathiId,
+            sathiID: sathiId,
           })
         );
         removeRequest(username);
