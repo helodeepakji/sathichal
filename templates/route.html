@@ -19,7 +19,7 @@
       p {
         font-family: "Ysabeau", sans-serif;
       }
-      .gm-style-mtc {
+      .hidden{
         display: none;
       }
       .main_box {
@@ -78,6 +78,7 @@
         color: white;
       }
 
+      .selectbtn button,
       .getStartBtn button,
       .userlist button {
         padding: 12px 15px;
@@ -90,6 +91,7 @@
         font-weight: 900;
       }
 
+      .selectbtn button:hover,
       .getStartBtn button:hover,
       .userlist button:hover {
         color: black;
@@ -168,6 +170,45 @@
         display: flex;
         align-items: center;
       }
+
+      .popupnotify {
+        width: 550px;
+        height: 400px;
+        background: black;
+        position: fixed;
+        z-index: 99999;
+        top: 35%;
+        left: 25%;
+    }
+
+    .popupnotify .closenotify {
+        float: right;
+        padding: 12px 20px;
+        font-size: 30px;
+    }
+
+    .popupnotify .logonotify {
+      display: grid;
+      justify-items: center;
+      padding: 50px 20px;
+  }
+
+
+  .popupnotify .notify {
+    color: white;
+    font-size: xx-large;
+    padding: 20px 50px;
+}
+
+    .popupnotify .selectbtn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 30px;
+    }
+
+
     </style>
   </head>
   <body>
@@ -196,10 +237,29 @@
       </div>
     </div>
 
+
+    <div class="popupnotify hidden" id="popupnotify">
+      <div class="closenotify"><i class="fas fa-times" style="color:white" onclick="clearSathiId()"></i></div>
+      <div class="logonotify">
+        <img src="{% static 'images/sathichal.png' %}" width="200px" alt="">
+      </div>
+      <div class="notify">
+          Are you Continue with Previous Group ?
+      </div>
+      <div class="selectbtn">
+          <button onclick="closeNotify()">Previous Group</button>
+          <button onclick="clearSathiId()">New Group</button>
+      </div>
+    </div>
+
     <!-- prettier--ignore -->
     {% include 'layout/footer.html' %}
 
     <script>
+      if(localStorage.getItem("sathiId")){
+        document.getElementById('popupnotify').classList.remove("hidden");
+      }
+
       let source = JSON.parse(localStorage.getItem("source"));
       let destination = JSON.parse(localStorage.getItem("destination"));
       var location_data = {
@@ -282,20 +342,8 @@
         }
 
         if (data.type == "confirmed") {
-          console.log(data);
-          sathiId = data.data.sathiId;
-          if (data.data.added_by_user.username != "{{user}}") {
-            addGroupMember(
-              data.data.added_by_user.username,
-              data.data.added_by_user.profile_pic
-            );
-          }
-          if (data.data.added_user.username != "{{user}}") {
-            addGroupMember(
-              data.data.added_user.username,
-              data.data.added_user.profile_pic
-            );
-          }
+          sathiId = data.Sathi_Id;
+          localStorage.setItem("sathiId", sathiId);
         }
       };
 
@@ -494,6 +542,16 @@
           $("#group_per").append(pers);
         }
       }
+
+      function clearSathiId(){
+        localStorage.removeItem("sathiId");
+        closeNotify()
+      }
+
+      function closeNotify(){
+        document.getElementById('popupnotify').classList.add("hidden");
+      }
+      
     </script>
   </body>
 </html>
