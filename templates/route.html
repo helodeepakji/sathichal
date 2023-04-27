@@ -157,18 +157,17 @@
         border-radius: 50%;
       }
 
-       #group_per i {
-            position: fixed;
-            margin-left: 50px;
-            margin-top: -50px;
-            font-size: 20px;
-        }
-
-        .groupdetail {
-          display: flex;
-          align-items: center;
+      #group_per i {
+        position: fixed;
+        margin-left: 50px;
+        margin-top: -50px;
+        font-size: 20px;
       }
 
+      .groupdetail {
+        display: flex;
+        align-items: center;
+      }
     </style>
   </head>
   <body>
@@ -180,7 +179,7 @@
           <div class="head"><h3>Group :</h3></div>
           <div class="groupdetail">
             <div class="stories-container" id="group_per"></div>
-            <div class="getStartBtn"><Button>Start Now</Button></div>
+            <div class="getStartBtn"><button>Start Now</button></div>
           </div>
         </div>
         <div id="map"></div>
@@ -230,6 +229,8 @@
           "{{destination.lng}}/"
       );
 
+      var sathiId = "";
+
       routeSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         console.log(data);
@@ -249,19 +250,22 @@
           removeRequest(data.username);
         }
 
-            if((data.type == 'auto') && (data.event = 'user_location')){
-                var marker = new google.maps.Marker({
-                    position: data.data.location.source,
-                    map: map,
-                    draggable: true
-                  });
-                  map.setCenter(data.data.location.source);
-                  addUserlist(data.data.user_data);
+        if (data.type == "auto" && (data.event = "user_location")) {
+          var marker = new google.maps.Marker({
+            position: data.data.location.source,
+            map: map,
+            draggable: true,
+          });
+          map.setCenter(data.data.location.source);
+          addUserlist(data.data.user_data);
 
-                  if(data.data.user_data.username == '{{user}}'){
-                    addGroupMember(data.data.user_data.username,data.data.user_data.profile_pic);
-                  }
-            }
+          if (data.data.user_data.username == "{{user}}") {
+            addGroupMember(
+              data.data.user_data.username,
+              data.data.user_data.profile_pic
+            );
+          }
+        }
 
         if (data.type == "success") {
           var marker = new google.maps.Marker({
@@ -279,11 +283,18 @@
 
         if (data.type == "confirmed") {
           console.log(data);
-          if(data.data.added_by_user.username != "{{user}}"){
-            addGroupMember(data.data.added_by_user.username,data.data.added_by_user.profile_pic);
+          sathiId = data.data.sathiId;
+          if (data.data.added_by_user.username != "{{user}}") {
+            addGroupMember(
+              data.data.added_by_user.username,
+              data.data.added_by_user.profile_pic
+            );
           }
-          if(data.data.added_user.username != "{{user}}"){
-            addGroupMember(data.data.added_user.username,data.data.added_user.profile_pic);
+          if (data.data.added_user.username != "{{user}}") {
+            addGroupMember(
+              data.data.added_user.username,
+              data.data.added_user.profile_pic
+            );
           }
         }
       };
@@ -313,6 +324,7 @@
             type: "sendConfirm",
             reciver: username,
             sender: "{{user}}",
+            sathiID: sathiId,
           })
         );
         removeRequest(username);
@@ -331,13 +343,27 @@
           }
           let mem =
             `
-                    <div class='user' id='` +user_data.username +`'>
-                        <img src="` +user_img +`" class="list-item-image" width="50px" height="50px">
+                    <div class='user' id='` +
+            user_data.username +
+            `'>
+                        <img src="` +
+            user_img +
+            `" class="list-item-image" width="50px" height="50px">
                         <div class="list-item-content">
-                            <h3>` +user_data.first_name +`  ` +user_data.last_name +`</h3>
-                            <p>@` +user_data.username +`</p>
+                            <h3>` +
+            user_data.first_name +
+            `  ` +
+            user_data.last_name +
+            `</h3>
+                            <p>@` +
+            user_data.username +
+            `</p>
                         </div>
-                        <button id="user_` +user_data.username +`" onclick="sendRequest('` +user_data.username + `')"> Send Request </button>
+                        <button id="user_` +
+            user_data.username +
+            `" onclick="sendRequest('` +
+            user_data.username +
+            `')"> Send Request </button>
                     </div>
                     `;
           $("#userlist").append(mem);
