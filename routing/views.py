@@ -1,6 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from home.views import loginfun
+from .models import group
+from home.models import sathiUser
 # Create your views here.
 
 
@@ -28,21 +30,58 @@ def routing(request, src_lat, src_lng, dest_lat, dest_lng):
 
 
 def groupget(request):
-    response = {
-        'username': {
-            'username' : 'username',
-            'sathi_id' : 'sathi_id',
-            'profile_pic' : 'profile_pic'
-        },
-        'username': {
-            'username' : 'username',
-            'sathi_id' : 'sathi_id',
-            'profile_pic' : 'profile_pic'
-        }
-    }
-    return JsonResponse(response)
+    sathi_id = request.POST.get('sathiId')
+    if sathi_id:
+        groups = group.objects.filter(sathi_id=sathi_id,status='P')
+        response = []
+        for temp_group in groups:
+            if response.count(temp_group.added_by_user) == 0:
+                try:
+                    profile_pic = sathiUser.objects.get(username=temp_group.added_by_user).profile_pic.url
+                except:
+                    profile_pic = ''
+                temp = {
+                    temp_group.added_by_user :{
+                        'username':temp_group.added_by_user,
+                        'sathi_id':temp_group.sathi_id,
+                        'profile_pic': profile_pic
+                    }
+                }
+                response.append(temp)
+            if response.count(temp_group.added_user) == 0:
+                temp_user = sathiUser.objects.get(username=temp_group.added_user)
+                try:
+                    profile_pic = sathiUser.objects.get(username=temp_group.added_by_user).profile_pic.url
+                except:
+                    profile_pic = ''
+                temp = {
+                temp_group.added_by_user :{
+                    'username':temp_group.added_by_user,
+                    'sathi_id':temp_group.sathi_id,
+                    'profile_pic': profile_pic
+                    }
+                }
+                response.append(temp)
+                
+            
+    else:
+        return JsonResponse({'status':'failed','message':'sathiId not found'})
+    print(response)
+    return JsonResponse({'response':response})
 
 
 def groupupdate(request):
-    response = {}
+    sathi_id = request.POST.get('sathiId')
+    print(sathi_id)
+    if sathi_id:
+        groups = group.objects.filter(sathi_id=sathi_id).update(status='I')
+        if groups:
+            # print(groups)
+            response = {
+                'status' : 'success',
+            }
+        else:
+            response={
+                'status' : 'failed',
+            }
     return JsonResponse(response)

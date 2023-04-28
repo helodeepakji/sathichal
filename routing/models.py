@@ -13,7 +13,7 @@ class group(models.Model):
     added_by_user = models.CharField(max_length=100)
     # status complete the travel or not
     status = models.CharField(max_length=1,choices = STATUS_FIElD)
-    sath_id = models.CharField(max_length=10)
+    sathi_id = models.CharField(max_length=10)
     # self.room_group_name
     group_name = models.CharField(max_length=100)
     date = models.DateField(auto_now_add=True)

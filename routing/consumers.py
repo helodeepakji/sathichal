@@ -89,7 +89,7 @@ class routConsumer(AsyncWebsocketConsumer):
             # if sathi id is not empty
             if sathiid == '':
                 sathiid = "SATHI"+str(random.randint(10000, 99999))
-                is_sathi_id = await database_sync_to_async(group.objects.filter(sath_id=sathiid).exists)()
+                is_sathi_id = await database_sync_to_async(group.objects.filter(sathi_id=sathiid).exists)()
                 print("is sathi id",is_sathi_id)
                 # if sathi id is already exist
                 while is_sathi_id == True:
@@ -98,7 +98,7 @@ class routConsumer(AsyncWebsocketConsumer):
             
             
             # to save group
-            created_group = group(group_name=self.room_group_name, added_by_user=text_data_json['sender'], added_user=text_data_json['reciver'], status = 'P' ,date=date, time=time, sath_id=sathiid)
+            created_group = group(group_name=self.room_group_name, added_by_user=text_data_json['sender'], added_user=text_data_json['reciver'], status = 'P' ,date=date, time=time, sathi_id=sathiid)
             await database_sync_to_async(created_group.save)()
             
             print("group created",created_group)
@@ -127,7 +127,7 @@ class routConsumer(AsyncWebsocketConsumer):
                     temp_obj['date'] = str(i.date)
                     temp_obj['time'] = str(i.time)
                     temp_obj['group_name'] = i.group_name
-                    temp_obj['sath_id'] = i.sath_id
+                    temp_obj['sathi_id'] = i.sathi_id
                     sendgroup.append(temp_obj)
             
             
