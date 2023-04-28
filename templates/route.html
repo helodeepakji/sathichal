@@ -544,12 +544,47 @@
       }
 
       function clearSathiId(){
-        localStorage.removeItem("sathiId");
-        closeNotify()
+        var temp = localStorage.getItem("sathiId");
+        $.ajax(
+          {
+              url:  "{% url 'groups/update/' %}", 
+              type: 'POST',
+              data: {
+                  'sathiId': temp,
+                  'csrfmiddlewaretoken': '{{ csrf_token }}',
+              },
+              dataType: 'json',
+              success: function(result){
+                if(result.status){
+                  console.log("success result");
+                  sathiId = "";
+                  localStorage.removeItem("sathiId");
+                  document.getElementById('popupnotify').classList.add("hidden");
+                }
+                console.log(result);
+              }
+          });
       }
 
       function closeNotify(){
         document.getElementById('popupnotify').classList.add("hidden");
+        sathiId = localStorage.getItem("sathiId");
+        $.ajax(
+          {
+              url:  "{% url 'groups/get/' %}", 
+              type: 'POST',
+              data: {
+                  'sathiId': sathiId,
+                  'csrfmiddlewaretoken': '{{ csrf_token }}',
+              },
+              dataType: 'json',
+              success: function(result){
+                if(result.status){
+                  console.log("success result");
+                }
+                console.log(result);
+              }
+          });
       }
       
     </script>
