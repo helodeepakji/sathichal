@@ -19,7 +19,7 @@
       p {
         font-family: "Ysabeau", sans-serif;
       }
-      .hidden{
+      .hidden {
         display: none;
       }
       .main_box {
@@ -179,36 +179,33 @@
         z-index: 99999;
         top: 35%;
         left: 25%;
-    }
+      }
 
-    .popupnotify .closenotify {
+      .popupnotify .closenotify {
         float: right;
         padding: 12px 20px;
         font-size: 30px;
-    }
+      }
 
-    .popupnotify .logonotify {
-      display: grid;
-      justify-items: center;
-      padding: 50px 20px;
-  }
+      .popupnotify .logonotify {
+        display: grid;
+        justify-items: center;
+        padding: 50px 20px;
+      }
 
+      .popupnotify .notify {
+        color: white;
+        font-size: xx-large;
+        padding: 20px 50px;
+      }
 
-  .popupnotify .notify {
-    color: white;
-    font-size: xx-large;
-    padding: 20px 50px;
-}
-
-    .popupnotify .selectbtn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      padding: 30px;
-    }
-
-
+      .popupnotify .selectbtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        padding: 30px;
+      }
     </style>
   </head>
   <body>
@@ -237,18 +234,21 @@
       </div>
     </div>
 
-
     <div class="popupnotify hidden" id="popupnotify">
-      <div class="closenotify"><i class="fas fa-times" style="color:white" onclick="clearSathiId()"></i></div>
+      <div class="closenotify">
+        <i
+          class="fas fa-times"
+          style="color: white"
+          onclick="clearSathiId()"
+        ></i>
+      </div>
       <div class="logonotify">
-        <img src="{% static 'images/sathichal.png' %}" width="200px" alt="">
+        <img src="{% static 'images/sathichal.png' %}" width="200px" alt="" />
       </div>
-      <div class="notify">
-          Are you Continue with Previous Group ?
-      </div>
+      <div class="notify">With which group you want to continue ?</div>
       <div class="selectbtn">
-          <button onclick="closeNotify()">Previous Group</button>
-          <button onclick="clearSathiId()">New Group</button>
+        <button onclick="closeNotify()">Current Group</button>
+        <button onclick="clearSathiId()">Create New Group</button>
       </div>
     </div>
 
@@ -256,8 +256,8 @@
     {% include 'layout/footer.html' %}
 
     <script>
-      if(localStorage.getItem("sathiId")){
-        document.getElementById('popupnotify').classList.remove("hidden");
+      if (localStorage.getItem("sathiId")) {
+        document.getElementById("popupnotify").classList.remove("hidden");
       }
 
       let source = JSON.parse(localStorage.getItem("source"));
@@ -543,50 +543,49 @@
         }
       }
 
-      function clearSathiId(){
+      function clearSathiId() {
         var temp = localStorage.getItem("sathiId");
-        $.ajax(
-          {
-              url:  "{% url 'groups/update/' %}", 
-              type: 'POST',
-              data: {
-                  'sathiId': temp,
-                  'csrfmiddlewaretoken': '{{ csrf_token }}',
-              },
-              dataType: 'json',
-              success: function(result){
-                if(result.status){
-                  console.log("success result");
-                  sathiId = "";
-                  localStorage.removeItem("sathiId");
-                  document.getElementById('popupnotify').classList.add("hidden");
-                }
-                console.log(result);
-              }
-          });
+        console.log(temp);
+        $.ajax({
+          url: "{% url 'groupupdate' %}",
+          type: "POST",
+          data: {
+            sathiId: temp,
+            csrfmiddlewaretoken: "{{ csrf_token }}",
+          },
+          dataType: "json",
+          success: function (result) {
+            console.log(result);
+            if (result.status) {
+              console.log("success result");
+              sathiId = "";
+              localStorage.removeItem("sathiId");
+              document.getElementById("popupnotify").classList.add("hidden");
+            }
+            console.log(result);
+          },
+        });
       }
 
-      function closeNotify(){
-        document.getElementById('popupnotify').classList.add("hidden");
+      function closeNotify() {
+        document.getElementById("popupnotify").classList.add("hidden");
         sathiId = localStorage.getItem("sathiId");
-        $.ajax(
-          {
-              url:  "{% url 'groups/get/' %}", 
-              type: 'POST',
-              data: {
-                  'sathiId': sathiId,
-                  'csrfmiddlewaretoken': '{{ csrf_token }}',
-              },
-              dataType: 'json',
-              success: function(result){
-                if(result.status){
-                  console.log("success result");
-                }
-                console.log(result);
-              }
-          });
+        $.ajax({
+          url: "{% url 'groupget' %}",
+          type: "POST",
+          data: {
+            sathiId: sathiId,
+            csrfmiddlewaretoken: "{{ csrf_token }}",
+          },
+          dataType: "json",
+          success: function (result) {
+            if (result.status) {
+              console.log("success result");
+            }
+            console.log(result);
+          },
+        });
       }
-      
     </script>
   </body>
 </html>
