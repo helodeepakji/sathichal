@@ -42,11 +42,9 @@ def groupget(request):
                 except:
                     profile_pic = ''
                 temp = {
-                    temp_group.added_by_user :{
                         'username':temp_group.added_by_user,
                         'sathi_id':temp_group.sathi_id,
                         'profile_pic': profile_pic
-                    }
                 }
                 response.append(temp)
             if response.count(temp_group.added_user) == 0:
@@ -57,11 +55,9 @@ def groupget(request):
                 except:
                     profile_pic = ''
                 temp = {
-                temp_group.added_user:{
                     'username':temp_group.added_user,
                     'sathi_id':temp_group.sathi_id,
                     'profile_pic': profile_pic
-                    }
                 }
                 response.append(temp)
                 
