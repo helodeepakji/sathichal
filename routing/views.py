@@ -25,3 +25,24 @@ def routing(request, src_lat, src_lng, dest_lat, dest_lng):
     context = {"source":source,"destination":destination}
 
     return render(request,"route.html",context)
+
+
+def groupget(request):
+    response = {
+        'username': {
+            'username' : 'username',
+            'sathi_id' : 'sathi_id',
+            'profile_pic' : 'profile_pic'
+        },
+        'username': {
+            'username' : 'username',
+            'sathi_id' : 'sathi_id',
+            'profile_pic' : 'profile_pic'
+        }
+    }
+    return JsonResponse(response)
+
+
+def groupupdate(request):
+    response = {}
+    return JsonResponse(response)
