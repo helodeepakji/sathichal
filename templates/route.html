@@ -251,6 +251,7 @@
         <button onclick="clearSathiId()">Create New Group</button>
       </div>
     </div>
+    <div id="test"></div>
 
     <!-- prettier--ignore -->
     {% include 'layout/footer.html' %}
@@ -507,18 +508,16 @@
         $("#req_" + user_data).remove();
       }
 
-      function addGroupMember(username, profil_pic) {
-        if (!profil_pic) {
-          profil_pic = "{% static 'images/profile.jpg' %}";
+      function addGroupMember(username, profile_pic) {
+        if (!profile_pic) {
+          profile_pic = "{% static 'images/profile.jpg' %}";
         }
         if (username == "{{user}}") {
           var pers =
             `
-                    <figure>
+                <figure id="mem_`+username+`">
                     <picture class="personal">
-                        <img src="` +
-            profil_pic +
-            `"/>
+                        <img src="` +profile_pic + `"/>
                     </picture>
                     <figcaption>{{user}}</figcaption>
                 </figure>
@@ -527,12 +526,10 @@
         } else {
           var pers =
             `
-                <figure>
+                <figure id="mem_`+username+`">
                     <picture>
                         <i class="fas fa-times-circle"></i>
-                      <img src="` +
-            profil_pic +
-            `"/>
+                      <img src="` + profile_pic + `"/>
                     </picture>
                     <figcaption>` +
             username +
@@ -579,10 +576,15 @@
           },
           dataType: "json",
           success: function (result) {
-            if (result.status) {
-              console.log("success result");
+            let content = '';
+            if (result) {
+              var cars = result.response;
+              cars.forEach((item) => {
+                const value = Object.values(item);
+                addGroupMember(value[0],value[2])
+              });
             }
-            console.log(result);
+            console.log(result.response);
           },
         });
       }
