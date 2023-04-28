@@ -36,6 +36,7 @@ def groupget(request):
         response = []
         for temp_group in groups:
             if response.count(temp_group.added_by_user) == 0:
+                print("temp_group.added_by_user",temp_group.added_by_user,response.count(temp_group.added_by_user))
                 try:
                     profile_pic = sathiUser.objects.get(username=temp_group.added_by_user).profile_pic.url
                 except:
@@ -49,14 +50,15 @@ def groupget(request):
                 }
                 response.append(temp)
             if response.count(temp_group.added_user) == 0:
-                temp_user = sathiUser.objects.get(username=temp_group.added_user)
+                # temp_user = sathiUser.objects.get(username=temp_group.added_user)
+                print("temp_group.added_user",temp_group.added_user,response.count(temp_group.added_user))
                 try:
-                    profile_pic = sathiUser.objects.get(username=temp_group.added_by_user).profile_pic.url
+                    profile_pic = sathiUser.objects.get(username=temp_group.added_user).profile_pic.url
                 except:
                     profile_pic = ''
                 temp = {
-                temp_group.added_by_user :{
-                    'username':temp_group.added_by_user,
+                temp_group.added_user:{
+                    'username':temp_group.added_user,
                     'sathi_id':temp_group.sathi_id,
                     'profile_pic': profile_pic
                     }
