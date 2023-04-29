@@ -346,8 +346,9 @@
           if((data.data.added_user.username == "{{user}}")||(data.data.added_by_user.username == "{{user}}")){
             sathiId = data.Sathi_Id;
             localStorage.setItem("sathiId", sathiId);
-            closeNotify();
+            getGroupdata();
           }
+          getGroupdata();
         }
       };
 
@@ -589,6 +590,10 @@
 
       function closeNotify() {
         document.getElementById("popupnotify").classList.add("hidden");
+        getGroupdata();
+      }
+
+      function getGroupdata(){
         sathiId = localStorage.getItem("sathiId");
         $.ajax({
           url: "{% url 'groupget' %}",
@@ -615,6 +620,7 @@
           },
         });
       }
+
     </script>
   </body>
 </html>
