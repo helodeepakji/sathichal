@@ -343,17 +343,11 @@
         }
 
         if (data.type == "confirmed") {
-          sathiId = data.Sathi_Id;
-          localStorage.setItem("sathiId", sathiId);
-          // console.log(data.data.added_user.username);
-          addGroupMember(
-            data.data.added_user.username,
-            data.data.added_user.profile_pic
-          );
-          addGroupMember(
-            data.data.added_by_user.username,
-            data.data.added_by_user.profile_pic
-          );
+          if((data.data.added_user.username == "{{user}}")||(data.data.added_by_user.username == "{{user}}")){
+            sathiId = data.Sathi_Id;
+            localStorage.setItem("sathiId", sathiId);
+            closeNotify();
+          }
         }
       };
 
