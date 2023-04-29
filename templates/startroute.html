@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {% load static %}
+</head>
+<body>
+    {% include 'layout/navbar.html' %}
+    <h1>welcome</h1>
+    {% include 'layout/footer.html' %}
+<script>
+
+    var sathiId = "";
+    var location_data;
+    if(localStorage.getItem('sathiId')){
+        sathiId = localStorage.getItem('sathiId');
+        let source = JSON.parse(localStorage.getItem("source"));
+        let destination = JSON.parse(localStorage.getItem("destination"));
+        var location_data = {
+            source: source,
+            destination: destination,
+        };
+        console.log(location_data);
+    }
+
+    const startrouteSocket = new WebSocket(
+        "ws://" +
+        window.location.host +
+        "/ws/routing/" +
+        sathiId +
+        "/"
+    );
+        
+    startrouteSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        console.log(data);
+    }
+
+    </script>
+</body>
+</html>

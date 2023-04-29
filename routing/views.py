@@ -83,3 +83,8 @@ def groupupdate(request):
                 'status' : 'failed',
             }
     return JsonResponse(response)
+
+
+
+def startroute(request):
+     return render(request,"startroute.html")
