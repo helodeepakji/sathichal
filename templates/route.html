@@ -345,6 +345,15 @@
         if (data.type == "confirmed") {
           sathiId = data.Sathi_Id;
           localStorage.setItem("sathiId", sathiId);
+          // console.log(data.data.added_user.username);
+          addGroupMember(
+            data.data.added_user.username,
+            data.data.added_user.profile_pic
+          );
+          addGroupMember(
+            data.data.added_by_user.username,
+            data.data.added_by_user.profile_pic
+          );
         }
       };
 
@@ -428,7 +437,8 @@
 
       function addExistlist(user_data) {
         var myEle = document.getElementById(user_data.username);
-        if (user_data.username != "{{user}}" && !myEle) {
+        const group_member = document.getElementById(user_data.username);
+        if (user_data.username != "{{user}}" && !myEle && !group_member) {
           if (user_data.profile_pic == null) {
             var user_img = "{% static 'images/profile.jpg' %}";
           } else {
@@ -509,34 +519,51 @@
       }
 
       function addGroupMember(username, profile_pic) {
-        if (!profile_pic) {
-          profile_pic = "{% static 'images/profile.jpg' %}";
+        //  remove user from userlist
+        const userList = document.getElementById(username);
+        if (userList) {
+          userList.remove();
         }
-        if (username == "{{user}}") {
-          var pers =
-            `
-                <figure id="mem_`+username+`">
+        // if user is not in group then add user to group
+        const is_member = document.getElementById("mem_" + username);
+        if (!is_member) {
+          if (!profile_pic) {
+            profile_pic = "{% static 'images/profile.jpg' %}";
+          }
+          if (username == "{{user}}") {
+            var pers =
+              `
+                <figure id="mem_` +
+              username +
+              `">
                     <picture class="personal">
-                        <img src="` +profile_pic + `"/>
+                        <img src="` +
+              profile_pic +
+              `"/>
                     </picture>
                     <figcaption>{{user}}</figcaption>
                 </figure>
                 `;
-          $("#group_per").append(pers);
-        } else {
-          var pers =
-            `
-                <figure id="mem_`+username+`">
-                    <picture>
-                        <i class="fas fa-times-circle"></i>
-                      <img src="` + profile_pic + `"/>
-                    </picture>
-                    <figcaption>` +
-            username +
-            `</figcaption>
-                  </figure>
-                `;
-          $("#group_per").append(pers);
+            $("#group_per").append(pers);
+          } else {
+            var pers =
+              `
+          <figure id="mem_` +
+              username +
+              `">
+          <picture>
+            <i class="fas fa-times-circle"></i>
+            <img src="` +
+              profile_pic +
+              `"/>
+            </picture>
+            <figcaption>` +
+              username +
+              `</figcaption>
+              </figure>
+              `;
+            $("#group_per").append(pers);
+          }
         }
       }
 
@@ -576,12 +603,16 @@
           },
           dataType: "json",
           success: function (result) {
-            let content = '';
+            let content = "";
             if (result) {
               var cars = result.response;
               cars.forEach((item) => {
                 const value = Object.values(item);
-                addGroupMember(value[0],value[2])
+                console.log(value);
+                const memberDiv = document.getElementById("mem_" + value[0]);
+                if (!memberDiv) {
+                  addGroupMember(value[0], value[2]);
+                }
               });
             }
             console.log(result.response);
