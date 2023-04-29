@@ -393,7 +393,9 @@
     <script>
       function addUserlist(user_data) {
         var myEle = document.getElementById(user_data.username);
-        if (user_data.username != "{{user}}" && !myEle) {
+        // if user present in group member list the do not add in user list
+        var groupMember = document.getElementById("mem_" + user_data.username);
+        if (user_data.username != "{{user}}" && !myEle && !groupMember) {
           if (user_data.profile_pic == null) {
             var user_img = "{% static 'images/profile.jpg' %}";
           } else {
