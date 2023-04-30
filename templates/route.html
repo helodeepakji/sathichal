@@ -269,7 +269,7 @@
           <div class="head"><h3>Group :</h3></div>
           <div class="groupdetail">
             <div class="stories-container" id="group_per"></div>
-            <div class="getStartBtn"><a href="/route/startroute"><button>Start Now</button></a></div>
+            <div class="getStartBtn"><button onclick="startNow()">Start Now</button></div>
           </div>
         </div>
         <div id="map">
@@ -409,6 +409,14 @@
           }
           getGroupdata();
         }
+
+        if(data.type == "startnow"){
+          console.log(data);
+          if((localStorage.getItem('sathiId'))&&(localStorage.getItem('sathiId') == data.Sathi_Id)){
+            window.location.href = "/route/startroute/"+data.Sathi_Id;
+          }
+        }
+
       };
 
       routeSocket.onclose = function (e) {
@@ -441,6 +449,16 @@
         );
         removeRequest(username);
       }
+
+      function startNow(){
+        routeSocket.send(
+          JSON.stringify({
+            type: "startnow",
+            sathiID: sathiId,
+          })
+        );
+      }
+
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>

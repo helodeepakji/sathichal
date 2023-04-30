@@ -86,5 +86,6 @@ def groupupdate(request):
 
 
 
-def startroute(request):
+def startroute(request,sathi_id):
+     print(sathi_id)
      return render(request,"startroute.html")
