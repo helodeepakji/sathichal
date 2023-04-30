@@ -310,6 +310,8 @@
           removeUserlist(data.username);
           removeRequest(data.username);
         }
+        // infowindow variable
+        var infoWindow = new google.maps.InfoWindow();
 
         if (data.type == "auto" && (data.event = "user_location")) {
           var marker = new google.maps.Marker({
@@ -319,6 +321,12 @@
           });
           map.setCenter(data.data.location.source);
           addUserlist(data.data.user_data);
+
+          // set infowindow content when page loads
+          infoWindow.setContent(
+            "<h3>" + data.data.user_data.username + "</h3>"
+          );
+          infoWindow.open(map, marker);
 
           if (data.data.user_data.username == "{{user}}") {
             addGroupMember(
@@ -335,6 +343,16 @@
             draggable: true,
           });
           map.setCenter(data.data.location.source);
+          // set infowindow content when page loads
+          infoWindow.setContent(
+            "<h3>" + data.data.user_data.username + "</h3>"
+          );
+          infoWindow.open(map, marker);
+
+          const temp_map = infoWindow.getMap();
+          // marker.addEventListener("mouseover", () => {
+          //   infoWindow.open(temp_map, marker);
+          // });
           addExistlist(data.data.user_data);
         }
 
