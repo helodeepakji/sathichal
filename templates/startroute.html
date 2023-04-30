@@ -19,17 +19,21 @@
         .chat_box{
             width: 30%;
         }
-        .map_box .group_box{
-            height: 20vh;
+        .group_box{
+            display: flex;
+            flex: 74px;
+            gap: 1rem;
+            background: white;
+            border-radius: 3px;
+            overflow-x: scroll;
+            user-select: none;
+            height: 18vh;
         }
         .map_box .map{
-            height: 70vh;
-        }
-        .chat_box .group_box{
-            height: 20vh;
+            height: 72vh;
         }
         .chat_box .chats{
-            height: 70vh;
+            height: 72vh;
             border: 1px solid black;
         }
         .chat-banner {
@@ -61,17 +65,96 @@
             color: white;
         }
         #chatmsg {
-            height: 55vh;
+            height: 57vh;
             padding: 0 15px;
             overflow: scroll;
         }
+        .sender, .receiver, .user-input {
+            margin: 0.8em;
+            padding: 10px;
+            height: auto;
+            width: auto;
+            max-width: 140px;
+            border-radius: 20px;
+            border: 1px solid black;
+            transition: all .2s ease;
+          }
+          .sender:hover {
+            background-color: pink;
+            cursor: pointer;
+          }
+          .receiver, .user-input {
+            margin-left: auto;
+            background-color: #0000004a;
+          }
+
+         /* group css */
+         figure {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            margin: 0;
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+            margin: 1rem;
+          }
+          figure > figcaption {
+            max-width: 74px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: system-ui, sans-serif;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 16px;
+            text-align: center;
+            color: #262626;
+          }
+          figure:hover {
+            transform: scale(1.1);
+          }
+          picture {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(white 66%, transparent 0),
+              linear-gradient(
+                45deg,
+                #f09433 0%,
+                #e6683c 25%,
+                #dc2743 50%,
+                #cc2366 75%,
+                #bc1888 100%
+              );
+            padding: 5px;
+            border-radius: 50%;
+          }
+          .personal {
+            background: none;
+          }
+          picture > img {
+            width: 64px;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border: 1px solid #b1b1b1;
+            border-radius: 50%;
+          }
+          
     </style>
 </head>
 <body>
     {% include 'layout/navbar.html' %}
     <div class="main_box">
         <div class="map_box">
-            <div class="group_box"></div>
+            <div class="group_box">
+                <figure id="mem_">
+                    <picture class="personal">
+                        <img src="profile_pic"/>
+                    </picture>
+                    <figcaption>{{user}}</figcaption>
+                </figure>
+            </div>
             <div id="map" class="map"></div>
         </div>
         <div class="chat_box">
@@ -81,6 +164,8 @@
                   <div><h2>Chat </h2></div>
                 </div>
                 <div class="chatmsg" id="chatmsg">
+                    <div class="receiver">hii</div>
+                    <div class="sender">hello</div>
                 </div>
                 <div class="input-msg">
                   <input type="text" id="chat-message-input" placeholder="type something" onfocus="this.value=''"/>
