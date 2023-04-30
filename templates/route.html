@@ -206,6 +206,58 @@
         gap: 20px;
         padding: 30px;
       }
+
+
+      .container {
+        position: absolute;
+        display: block;
+        width: 80px;
+        margin: 60px auto;
+        bottom: 30vh;
+        left: 25vw;
+        }
+      
+       .container .delay1 {
+          animation: waves 2.5s linear infinite;
+          animation-delay: .1s;
+        }
+        
+        .container .delay2 {
+          animation: waves 2.5s linear .7s forwards infinite,
+        }
+        
+        .container .delay3 {
+          animation: waves 2.5s linear 1.3s forwards infinite;
+        }
+        
+        .container .delay4 {
+          animation: waves 2.5s linear 1.9s forwards infinite;
+        }
+
+      .circle {
+        display: block;
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        background: #0fbcf845;
+        margin: 10px;
+        transition: 5s ease;
+        position: absolute;
+        top: 0px
+      }
+      
+      @-webkit-keyframes waves {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        
+        100% {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+
     </style>
   </head>
   <body>
@@ -217,10 +269,17 @@
           <div class="head"><h3>Group :</h3></div>
           <div class="groupdetail">
             <div class="stories-container" id="group_per"></div>
-            <div class="getStartBtn"><button>Start Now</button></div>
+            <div class="getStartBtn"><button onclick="startNow()">Start Now</button></div>
           </div>
         </div>
-        <div id="map"></div>
+        <div id="map">
+        </div>
+        <div class="container">
+          <div class="circle delay1"></div>
+          <div class="circle delay2"></div>
+          <div class="circle delay3"></div>
+          <div class="circle delay4"></div>
+        </div>
       </div>
       <div class="channel_lay">
         <div class="request_list">
@@ -361,18 +420,21 @@
         }
 
         if (data.type == "confirmed") {
-          sathiId = data.Sathi_Id;
-          localStorage.setItem("sathiId", sathiId);
-          // console.log(data.data.added_user.username);
-          addGroupMember(
-            data.data.added_user.username,
-            data.data.added_user.profile_pic
-          );
-          addGroupMember(
-            data.data.added_by_user.username,
-            data.data.added_by_user.profile_pic
-          );
+          if((data.data.added_user.username == "{{user}}")||(data.data.added_by_user.username == "{{user}}")){
+            sathiId = data.Sathi_Id;
+            localStorage.setItem("sathiId", sathiId);
+            getGroupdata();
+          }
+          getGroupdata();
         }
+
+        if(data.type == "startnow"){
+          console.log(data);
+          if((localStorage.getItem('sathiId'))&&(localStorage.getItem('sathiId') == data.Sathi_Id)){
+            window.location.href = "/route/startroute/"+data.Sathi_Id;
+          }
+        }
+
       };
 
       routeSocket.onclose = function (e) {
@@ -405,6 +467,16 @@
         );
         removeRequest(username);
       }
+
+      function startNow(){
+        routeSocket.send(
+          JSON.stringify({
+            type: "startnow",
+            sathiID: sathiId,
+          })
+        );
+      }
+
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
@@ -613,6 +685,10 @@
 
       function closeNotify() {
         document.getElementById("popupnotify").classList.add("hidden");
+        getGroupdata();
+      }
+
+      function getGroupdata(){
         sathiId = localStorage.getItem("sathiId");
         $.ajax({
           url: "{% url 'groupget' %}",
@@ -639,6 +715,7 @@
           },
         });
       }
+
     </script>
   </body>
 </html>

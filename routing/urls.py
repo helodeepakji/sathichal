@@ -7,5 +7,6 @@ urlpatterns = [
     path('routing/<str:src_lat>/<str:src_lng>/<str:dest_lat>/<str:dest_lng>', views.routing, name='routing'),
     path('groups/get',views.groupget, name='groupget'),
     path('groups/update/',views.groupupdate, name='groupupdate'),
+    path('startroute/<str:sathi_id>',views.startroute, name='startroute'),
 ]
 
