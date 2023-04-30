@@ -136,6 +136,13 @@ class routConsumer(AsyncWebsocketConsumer):
                 self.room_group_name, {"type": "all_user","Event": "confirmed","group":sendgroup,"sender":added_by_user,"reciver":added_user,"Sathi_Id" : sathiid}   
             )
 
+        # start now routing 
+        if eventType == 'startnow' :
+            sathiid = text_data_json['sathiID']
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "all_user","Event": "startnow","sathid" : sathiid}
+                )
+
 
 
 
@@ -212,6 +219,12 @@ class routConsumer(AsyncWebsocketConsumer):
                         'added_user' : event['reciver']
                     },
                     'Sathi_Id' : event['Sathi_Id']
+                }))
+
+        if event['Event'] == 'startnow' :
+            await self.send(text_data=json.dumps({
+                    'type': 'startnow',
+                    'Sathi_Id' : event['sathid']
                 }))
 
 
