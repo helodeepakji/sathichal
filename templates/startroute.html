@@ -6,38 +6,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     {% load static %}
+    <style>
+        .main_box{
+            display: flex;
+        }
+
+        .chat_box,
+        .map_box{
+            width: 70%;
+            height: 90vh;
+        }
+        .chat_box{
+            width: 30%;
+        }
+        .map_box .group_box{
+            height: 20vh;
+        }
+        .map_box .map{
+            height: 70vh;
+        }
+        .chat_box .group_box{
+            height: 20vh;
+        }
+        .chat_box .chats{
+            height: 70vh;
+            border: 1px solid black;
+        }
+        .chat-banner {
+            color: white;
+            background: black;
+            padding: 10px 15px;
+        }
+        .input-msg{
+            display: flex;
+            align-items: center;
+            height: fit-content;
+            padding: 10px;
+            border-top: 1px solid black;
+        }
+        #chat-message-input {
+            height: 30px;
+            border-radius: 20px;
+            padding: 0 20px;
+            border: 1px solid grey;
+            width: 75%;
+          }
+        #chat-message-submit{
+            width: 25%;
+            border-radius: 20px;
+            padding: 10px 5px;
+            border: 1px solid gray;
+            margin: 5px;
+            background: black;
+            color: white;
+        }
+        #chatmsg {
+            height: 55vh;
+            padding: 0 15px;
+            overflow: scroll;
+        }
+    </style>
 </head>
 <body>
     {% include 'layout/navbar.html' %}
-    <h1>welcome</h1>
+    <div class="main_box">
+        <div class="map_box">
+            <div class="group_box"></div>
+            <div id="map" class="map"></div>
+        </div>
+        <div class="chat_box">
+            <div class="group_box"></div>
+            <div class="chats">
+                <div class="chat-banner">
+                  <div><h2>Chat </h2></div>
+                </div>
+                <div class="chatmsg" id="chatmsg">
+                </div>
+                <div class="input-msg">
+                  <input type="text" id="chat-message-input" placeholder="type something" onfocus="this.value=''"/>
+                  <input id="chat-message-submit" type="button" value="Send">
+                </div>
+              </div>
+        </div>
+    </div>
     {% include 'layout/footer.html' %}
-<script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsZwc4NHo2JhjvtoFmv5N89u7Ta042KtE&libraries=places"></script>
+    <script>
 
-    var sathiId = "";
-    var location_data;
-    if(localStorage.getItem('sathiId')){
-        sathiId = localStorage.getItem('sathiId');
-        let source = JSON.parse(localStorage.getItem("source"));
-        let destination = JSON.parse(localStorage.getItem("destination"));
-        var location_data = {
-            source: source,
-            destination: destination,
-        };
-        console.log(location_data);
-    }
+        var sathiId = "";
+        var location_data;
+        let source,destination;
+        if(localStorage.getItem('sathiId')){
+            sathiId = localStorage.getItem('sathiId');
+            source = JSON.parse(localStorage.getItem("source"));
+            destination = JSON.parse(localStorage.getItem("destination"));
+            location_data = {
+                source: source,
+                destination: destination,
+            };
+            console.log(location_data);
+        }else{
+            window.location.href = "/";
+        }
 
-    const startrouteSocket = new WebSocket(
-        "ws://" +
-        window.location.host +
-        "/ws/routing/" +
-        sathiId +
-        "/"
-    );
-        
-    startrouteSocket.onmessage = function (e) {
-        const data = JSON.parse(e.data);
-        console.log(data);
-    }
+        const map = new google.maps.Map(document.getElementById('map'), {
+            center: source,
+            zoom: 15,
+            scrollwheel: false,
+        });
+
+
+        const startrouteSocket = new WebSocket(
+            "ws://" +
+            window.location.host +
+            "/ws/routing/" +
+            sathiId +
+            "/"
+        );
+            
+        startrouteSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            console.log(data);
+        }
 
     </script>
 </body>
