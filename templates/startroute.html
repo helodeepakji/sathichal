@@ -14,26 +14,29 @@
         .chat_box,
         .map_box{
             width: 70%;
-            height: 90vh;
         }
         .chat_box{
             width: 30%;
+            display: grid;
+            align-content: space-between;
+            border-left: 1px solid white;
         }
         .group_box{
+            background: white;
+            border-top: 1px solid white;
+            overflow-x: scroll;
+            user-select: none;
+        }
+        .group_box .groups{
             display: flex;
             flex: 74px;
             gap: 1rem;
-            background: white;
-            border-radius: 3px;
-            overflow-x: scroll;
-            user-select: none;
-            height: 18vh;
         }
         .map_box .map{
-            height: 72vh;
+            height: 550px;
         }
         .chat_box .chats{
-            height: 72vh;
+            height: 550px;
             border: 1px solid black;
         }
         .chat-banner {
@@ -65,7 +68,7 @@
             color: white;
         }
         #chatmsg {
-            height: 57vh;
+            height: 440px;;
             padding: 0 15px;
             overflow: scroll;
         }
@@ -88,6 +91,23 @@
             background-color: #0000004a;
           }
 
+          .username_list {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+        }
+
+        select#userlist {
+          padding: 10px 12px;
+          font-size: 20px;
+          width: 80%;
+          border-radius: 15px;
+          background: black;
+          color: white;
+          text-transform: uppercase;
+      }
+
          /* group css */
          figure {
             display: flex;
@@ -100,7 +120,7 @@
             margin: 1rem;
           }
           figure > figcaption {
-            max-width: 74px;
+            max-width: 80px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -148,20 +168,48 @@
     <div class="main_box">
         <div class="map_box">
             <div class="group_box">
-                <figure id="mem_">
+              <div class="chat-banner">
+                <h2>Select Direction</h2>
+              </div>
+              <div class="groups">
+                <figure id="mem_" onclick="user_location()">
                     <picture class="personal">
-                        <img src="profile_pic"/>
+                        <img src="{% static 'images/destination.webp' %}"/>
                     </picture>
-                    <figcaption>{{user}}</figcaption>
+                    <figcaption>Destination</figcaption>
                 </figure>
+                {% for person in data %}
+                    <figure id="mem_">
+                      <picture class="personal">
+                        {% if person.profile_pic %}
+                          <img src="{{person.profile_pic}}"/>
+                        {% else %}
+                          <img src="{% static 'images/profile.jpg' %}"/>
+                        {% endif %}
+                      </picture>
+                      <figcaption>{{person.username}}</figcaption>
+                    </figure>
+                {% endfor %}
+              </div>
             </div>
             <div id="map" class="map"></div>
         </div>
         <div class="chat_box">
-            <div class="group_box"></div>
+            <div class="group_box">
+              <div class="chat-banner">
+                <h2>Select Chat Member</h2>
+              </div>
+              <div class="username_list">
+                <select name="username" id="userlist">
+                  {% for userlist in data %}
+                  <option value="{{userlist.username}}">{{userlist.username}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
             <div class="chats">
                 <div class="chat-banner">
-                  <div><h2>Chat </h2></div>
+                  <h2>Chat</h2>
                 </div>
                 <div class="chatmsg" id="chatmsg">
                     <div class="receiver">hii</div>
@@ -176,6 +224,7 @@
     </div>
     {% include 'layout/footer.html' %}
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsZwc4NHo2JhjvtoFmv5N89u7Ta042KtE&libraries=places"></script>
+    <script src="{% static 'js/routemap.js' %}"></script>
     <script>
 
         var sathiId = "";
@@ -200,6 +249,14 @@
             scrollwheel: false,
         });
 
+        function user_location(){
+          var targetDiv = document.getElementById("mem_").getElementsByClassName("bar")[0];
+          console.log("current user");
+          const directionsRenderer = new google.maps.DirectionsRenderer();
+          const directionsService = new google.maps.DirectionsService();
+          directionsRenderer.setMap(map);
+          calculateAndDisplayRoute(directionsService,directionsRenderer,source,destination);
+        }
 
         const startrouteSocket = new WebSocket(
             "ws://" +
@@ -212,8 +269,40 @@
         startrouteSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             console.log(data);
-        }
+            if(data.type == "connection"){
+                startrouteSocket.send(
+                    JSON.stringify({
+                      type: "user_location",
+                      username: "{{user}}",
+                      location_data,
+                    })
+                  );
+            }
+        };
 
+    </script>
+    <script>
+      document.querySelector('#chat-message-input').focus();
+      document.querySelector('#chat-message-input').onkeyup = function(e) {
+          if (e.keyCode === 13) {  // enter, return
+              document.querySelector('#chat-message-submit').click();
+          }
+      };
+
+      document.querySelector('#chat-message-submit').onclick = function(e) {
+          const messageInputDom = document.querySelector('#chat-message-input');
+          const message = messageInputDom.value;
+          const tosend = document.getElementById("userlist").value;
+          if(message != ""){
+            startrouteSocket.send(JSON.stringify({
+              'type' : "chat",
+              'message': message,
+              'sender' : "{{user}}",
+              'tosend' : tosend
+            }));
+          }
+          messageInputDom.value = '';
+      };
     </script>
 </body>
 </html>
