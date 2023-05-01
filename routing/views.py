@@ -116,7 +116,4 @@ def startroute(request,sathi_id):
             }
             response.append(temp)
     print(response)
-    context = {"data": response}
-    return render(request,"startroute.html",context)
-     
-
+    return render(request,"startroute.html")
