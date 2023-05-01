@@ -85,7 +85,6 @@ def groupupdate(request):
     return JsonResponse(response)
 
 
-
 def startroute(request,sathi_id):
     print(sathi_id)
     groups = group.objects.filter(sathi_id=sathi_id,status='P')
@@ -117,4 +116,7 @@ def startroute(request,sathi_id):
             }
             response.append(temp)
     print(response)
-    return render(request,"startroute.html",{'response':response})
+    context = {"data": response}
+    return render(request,"startroute.html",context)
+     
+
