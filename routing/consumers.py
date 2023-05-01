@@ -89,10 +89,13 @@ class routConsumer(AsyncWebsocketConsumer):
             temp_sathi_id = None
             # if sathi id is empty and group is already exist for sender or reciver then use that group id
             if sathi_id == '' and await database_sync_to_async(group.objects.filter(Q(added_by_user=text_data_json['sender']) | Q(added_user=text_data_json['reciver']),status='P').exists)():
-                temp_sathi_id = await database_sync_to_async(group.objects.filter(added_by_user=text_data_json['sender'],status='P'))()
-                sathi_id = temp_sathi_id[0].sathi_id
+                temp_sathi_id = await database_sync_to_async(list)(group.objects.filter(Q(added_by_user=text_data_json['sender'])|Q(added_user=text_data_json['reciver']),status='P'))
                 print(temp_sathi_id)
-            
+                try:
+                    sathi_id = temp_sathi_id[0].sathi_id
+                except:
+                    pass
+
             # if sathi id is not empty
             if temp_sathi_id == None:
                 sathiid = "SATHI"+str(random.randint(10000, 99999))
@@ -101,11 +104,9 @@ class routConsumer(AsyncWebsocketConsumer):
                     print("sathi id in while loop",sathiid)
                     sathiid = "SATHI"+str(random.randint(10000, 99999))
                 sathi_id = sathiid
-            else:
-                sathi_id = temp_sathi_id
 
             
-            print("sathi id before saving group",sathiid)
+            print("sathi id before saving group",sathi_id)
             # to save group
             created_group = group(group_name=self.room_group_name, added_by_user=text_data_json['sender'], added_user=text_data_json['reciver'], status = 'P' ,date=date, time=time, sathi_id=sathi_id)
             await database_sync_to_async(created_group.save)()
@@ -116,7 +117,7 @@ class routConsumer(AsyncWebsocketConsumer):
             added_user = await database_sync_to_async(self.get_user)(text_data_json['reciver']) 
             
             # to get group
-            temp_group = await database_sync_to_async(list)(group.objects.filter(Q(added_by_user = text_data_json['sender']) | Q(added_by_user = text_data_json['sender']),group_name=self.room_group_name,date = date, status = 'P'))
+            temp_group = await database_sync_to_async(list)(group.objects.filter(Q(added_by_user = text_data_json['sender']) | Q(added_by_user = text_data_json['sender']) | Q(added_by_user = text_data_json['reciver']) | Q(added_by_user = text_data_json['reciver']),group_name=self.room_group_name,date = date, status = 'P'))
             print(temp_group)
             sendgroup = []
             
@@ -140,9 +141,9 @@ class routConsumer(AsyncWebsocketConsumer):
                     sendgroup.append(temp_obj)
             
             
-            print(sendgroup)
+            print('send Group ',sendgroup)
             await self.channel_layer.group_send(
-                self.room_group_name, {"type": "all_user","Event": "confirmed","group":sendgroup,"sender":added_by_user,"reciver":added_user,"Sathi_Id" : sathiid}   
+                self.room_group_name, {"type": "all_user","Event": "confirmed","group":sendgroup,"sender":added_by_user,"reciver":added_user,"Sathi_Id" : sathi_id}   
             )
 
         # start now routing 
