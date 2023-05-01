@@ -119,3 +119,4 @@ def startroute(request,sathi_id):
     context = {"data": response}
     return render(request,"startroute.html",context)
      
+
