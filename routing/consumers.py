@@ -85,12 +85,14 @@ class routConsumer(AsyncWebsocketConsumer):
             print(self.room_group_name)
             date = datetime.now().date()
             time = datetime.now().time()
-            sathi_id = text_data_json['sathiID']
+            sathi_id = text_data_json.get('sathiId','') #['sathiID']
             temp_sathi_id = None
+            is_temp_sathi_id = await database_sync_to_async(group.objects.filter(Q(added_by_user=text_data_json['sender']) | Q(added_user=text_data_json['sender'])|Q(added_by_user=text_data_json['reciver'])|Q(added_user=text_data_json['reciver']),status='P').exists)()
+            print("is_temp_sathi_id",is_temp_sathi_id)
             # if sathi id is empty and group is already exist for sender or reciver then use that group id
-            if sathi_id == '' and await database_sync_to_async(group.objects.filter(Q(added_by_user=text_data_json['sender']) | Q(added_user=text_data_json['reciver']),status='P').exists)():
-                temp_sathi_id = await database_sync_to_async(list)(group.objects.filter(Q(added_by_user=text_data_json['sender'])|Q(added_user=text_data_json['reciver']),status='P'))
-                print(temp_sathi_id)
+            if sathi_id == '' and is_temp_sathi_id:
+                temp_sathi_id = await database_sync_to_async(list)(group.objects.filter(Q(added_by_user=text_data_json['sender'])|Q(added_user=text_data_json['sender'])|Q(added_by_user=text_data_json['reciver'])|Q(added_user=text_data_json['reciver']),status='P'))
+                print("tarun sathi id",temp_sathi_id[0].sathi_id)
                 try:
                     sathi_id = temp_sathi_id[0].sathi_id
                 except:
@@ -100,7 +102,7 @@ class routConsumer(AsyncWebsocketConsumer):
             if temp_sathi_id == None:
                 sathiid = "SATHI"+str(random.randint(10000, 99999))
                 # if sathi id is already exist
-                while await database_sync_to_async(group.objects.filter(sathi_id=sathiid,status='P').exists)():
+                while await database_sync_to_async(group.objects.filter(sathi_id=sathiid).exists)():
                     print("sathi id in while loop",sathiid)
                     sathiid = "SATHI"+str(random.randint(10000, 99999))
                 sathi_id = sathiid
@@ -117,8 +119,10 @@ class routConsumer(AsyncWebsocketConsumer):
             added_user = await database_sync_to_async(self.get_user)(text_data_json['reciver']) 
             
             # to get group
-            temp_group = await database_sync_to_async(list)(group.objects.filter(Q(added_by_user = text_data_json['sender']) | Q(added_by_user = text_data_json['sender']) | Q(added_by_user = text_data_json['reciver']) | Q(added_by_user = text_data_json['reciver']),group_name=self.room_group_name,date = date, status = 'P'))
-            print(temp_group)
+            temp_group = await database_sync_to_async(list)(group.objects.filter(sathi_id = sathi_id, status = 'P'))
+            # print(temp_group[0])
+            for i in temp_group:
+                print("temp group",i.sathi_id)
             sendgroup = []
             
             # for differece between time
