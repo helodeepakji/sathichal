@@ -36,7 +36,6 @@
             height: 550px;
         }
         .chat_box .chats{
-            height: 550px;
             border: 1px solid black;
         }
         .chat-banner {
@@ -68,7 +67,7 @@
             color: white;
         }
         #chatmsg {
-            height: 440px;;
+            height: 610px;
             padding: 0 15px;
             overflow: scroll;
         }
@@ -172,14 +171,14 @@
                 <h2>Select Direction</h2>
               </div>
               <div class="groups">
-                <figure id="mem_" onclick="user_location()">
+                <figure id="root" onclick="user_location()">
                     <picture class="personal">
                         <img src="{% static 'images/destination.webp' %}"/>
                     </picture>
                     <figcaption>Destination</figcaption>
                 </figure>
                 {% for person in data %}
-                    <figure id="mem_">
+                    <figure id="mem_" onclick="getLocationUser('{{person.username}}')">
                       <picture class="personal">
                         {% if person.profile_pic %}
                           <img src="{{person.profile_pic}}"/>
@@ -195,18 +194,6 @@
             <div id="map" class="map"></div>
         </div>
         <div class="chat_box">
-            <div class="group_box">
-              <div class="chat-banner">
-                <h2>Select Chat Member</h2>
-              </div>
-              <div class="username_list">
-                <select name="username" id="userlist">
-                  {% for userlist in data %}
-                  <option value="{{userlist.username}}">{{userlist.username}}</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
             <div class="chats">
                 <div class="chat-banner">
                   <h2>Chat</h2>
@@ -246,11 +233,11 @@
         const map = new google.maps.Map(document.getElementById('map'), {
             center: source,
             zoom: 15,
-            scrollwheel: false,
+            scrollwheel: true,
         });
 
         function user_location(){
-          var targetDiv = document.getElementById("mem_").getElementsByClassName("bar")[0];
+          var targetDiv = document.getElementById("root").getElementsByClassName("bar")[0];
           console.log("current user");
           const directionsRenderer = new google.maps.DirectionsRenderer();
           const directionsService = new google.maps.DirectionsService();
@@ -270,14 +257,33 @@
             const data = JSON.parse(e.data);
             console.log(data);
             if(data.type == "connection"){
-                startrouteSocket.send(
+               console.log("user connected");
+            }
+
+            if(data.type == "getLocation"){
+              console.log(data.data.username + " location sended");
+                if(data.data.loc_user == "{{user}}"){
+                  startrouteSocket.send(
                     JSON.stringify({
-                      type: "user_location",
+                      type: "sendlocation",
                       username: "{{user}}",
+                      loc_user: data.data.loc_user,
                       location_data,
                     })
                   );
+                }
             }
+
+            if(data.type == "sendLocation"){
+              if(data.data.username != "{{user}}"){
+                console.log("set location");
+                const directionsRenderer = new google.maps.DirectionsRenderer();
+                const directionsService = new google.maps.DirectionsService();
+                directionsRenderer.setMap(map);
+                calculateAndDisplayRoute(directionsService,directionsRenderer,source,data.data.location.source);
+              }
+            }
+
         };
 
     </script>
@@ -303,6 +309,19 @@
           }
           messageInputDom.value = '';
       };
+
+
+      function getLocationUser(username){
+          console.log(username);
+          startrouteSocket.send(
+            JSON.stringify({
+              type: "getLocation",
+              loc_user: username,
+              username: "{{user}}"
+            })
+          );
+      }
+
     </script>
 </body>
 </html>
