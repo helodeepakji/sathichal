@@ -40,13 +40,20 @@ class sathiRoute(AsyncWebsocketConsumer):
         print(text_data_json)
 
         eventType = text_data_json['type']
-        if eventType == "user_location":
-            await self.channel_layer.group_send(
-                self.room_group_name, {"type": "group_send","Event": "user_location","username" : text_data_json['username'], "location" : text_data_json['location_data']}
-            )
 
         if eventType == "chat" :
             print(text_data_json)
+
+
+        if eventType == "getLocation":
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "group_send","Event": "getLocation","username" : text_data_json['username'],"loc_user" : text_data_json['loc_user']}
+            )
+
+        if eventType == "sendlocation":
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "group_send","Event": "sendLocation","username" : text_data_json['username'], "location" : text_data_json['location_data'],"loc_user" : text_data_json['loc_user']}
+            )
 
        
 
@@ -66,12 +73,23 @@ class sathiRoute(AsyncWebsocketConsumer):
                         'message': event['message']
                     }
                 }))
-            
-        if event['Event'] == 'user_location' :
+
+        if event['Event'] == 'getLocation' :
+            if event['loc_user'] != event['username'] :
+                await self.send(text_data=json.dumps({
+                        'type': 'getLocation',
+                        'data': {
+                            'loc_user' : event['loc_user'],
+                            'username': event['username'],
+                        }
+                }))
+
+        if event['Event'] == 'sendLocation' :
             await self.send(text_data=json.dumps({
-                    'type': 'user_location',
+                    'type': 'sendLocation',
                     'data': {
                         'username': event['username'],
+                        'loc_user': event['loc_user'],
                         'location': event['location']
                     }
             }))
