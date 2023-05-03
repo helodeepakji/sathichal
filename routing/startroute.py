@@ -42,7 +42,9 @@ class sathiRoute(AsyncWebsocketConsumer):
         eventType = text_data_json['type']
 
         if eventType == "chat" :
-            print(text_data_json)
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "group_send","Event": "chat","message": text_data_json['message'] ,"sender" : text_data_json['sender']}
+            )
 
 
         if eventType == "getLocation":
@@ -91,6 +93,15 @@ class sathiRoute(AsyncWebsocketConsumer):
                         'username': event['username'],
                         'loc_user': event['loc_user'],
                         'location': event['location']
+                    }
+            }))
+
+        if event['Event'] == 'chat' :
+            await self.send(text_data=json.dumps({
+                    'type': 'chat',
+                    'data': {
+                        'message': event['message'],
+                        'sender': event['sender']
                     }
             }))
             
