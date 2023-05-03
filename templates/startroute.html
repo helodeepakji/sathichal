@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     {% load static %}
     <style>
+        .hidden{
+          display: none;
+        }
+
         .main_box{
             display: flex;
         }
@@ -175,6 +179,19 @@
           width: 100%;
           text-align: right;
       }
+
+
+      .gonow {
+        position: absolute;
+        color: white;
+        background: black;
+        left: 5px;
+        padding: 10px 12px;
+        z-index: 999;
+        border-radius: 10px;
+        top: 760px;
+        cursor: pointer;
+    }
           
     </style>
 </head>
@@ -207,6 +224,7 @@
                 {% endfor %}
               </div>
             </div>
+            <div class="gonow hidden" id="gonow" onclick="letsGo()">Lets GO</div>
             <div id="map" class="map"></div>
         </div>
         <div class="chat_box">
@@ -231,6 +249,7 @@
         var sathiId = "";
         var location_data;
         let source,destination;
+        var maplat,maplng;
         if(localStorage.getItem('sathiId')){
             sathiId = localStorage.getItem('sathiId');
             source = JSON.parse(localStorage.getItem("source"));
@@ -258,6 +277,9 @@
           console.log("current user");
           directionsRenderer.setMap(map);
           calculateAndDisplayRoute(directionsService,directionsRenderer,source,destination);
+          maplat = destination.lat;
+          maplng = destination.lng;
+          document.getElementById("gonow").classList.remove("hidden");
         }
 
         const startrouteSocket = new WebSocket(
@@ -294,6 +316,9 @@
                 console.log("set location");
                 directionsRenderer.setMap(map);
                 calculateAndDisplayRoute(directionsService,directionsRenderer,source,data.data.location.source);
+                maplat = data.data.location.source.lat;
+                maplng = data.data.location.source.lng;
+                document.getElementById("gonow").classList.remove("hidden");
               }
             }
 
@@ -341,6 +366,12 @@
               username: "{{user}}"
             })
           );
+      }
+
+      function letsGo(){
+        if(maplat && maplng){
+          window.open('http://maps.google.co.in/maps?q='+maplat+','+maplng);
+        }
       }
 
     </script>
