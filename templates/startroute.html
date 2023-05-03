@@ -23,7 +23,7 @@
         }
         .group_box{
             background: white;
-            border-top: 1px solid white;
+            border: 1px solid #cbcbcb;
             overflow-x: scroll;
             user-select: none;
         }
@@ -36,7 +36,7 @@
             height: 550px;
         }
         .chat_box .chats{
-            border: 1px solid black;
+          border: 1px solid #cbcbcb;
         }
         .chat-banner {
             color: white;
@@ -159,6 +159,22 @@
             border: 1px solid #b1b1b1;
             border-radius: 50%;
           }
+
+          .sender span {
+            font-size: 9px;
+            font-style: italic;
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
+
+        .receiver span {
+          font-size: 9px;
+          font-style: italic;
+          display: block;
+          width: 100%;
+          text-align: right;
+      }
           
     </style>
 </head>
@@ -199,8 +215,6 @@
                   <h2>Chat</h2>
                 </div>
                 <div class="chatmsg" id="chatmsg">
-                    <div class="receiver">hii</div>
-                    <div class="sender">hello</div>
                 </div>
                 <div class="input-msg">
                   <input type="text" id="chat-message-input" placeholder="type something" onfocus="this.value=''"/>
@@ -283,6 +297,15 @@
               }
             }
 
+            if(data.type == "chat"){
+              if(data.data.sender != "{{user}}"){
+                document.getElementById("chatmsg").innerHTML += '<div class="sender"><p>'+data.data.message+'</p><span>'+data.data.sender+'</span></div>';
+              }else{
+                document.getElementById("chatmsg").innerHTML += '<div class="receiver"><p>'+data.data.message+'</p><span>'+data.data.sender+'</span></div>';
+              }
+              scrolldown_chat();
+            }
+
         };
 
     </script>
@@ -321,5 +344,18 @@
       }
 
     </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+      $('#chatmsg').scrollTop($('#chatmsg')[0].scrollHeight);
+      function scrolldown_chat(){
+        setTimeout(function() {
+          var ChatDiv = $('#chatmsg');
+          var height = ChatDiv[0].scrollHeight + 200;
+          ChatDiv.scrollTop(height);
+        }, 500);
+      }
+    </script>
+
 </body>
 </html>
