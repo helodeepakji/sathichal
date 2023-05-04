@@ -667,6 +667,7 @@
           type: "POST",
           data: {
             sathiId: temp,
+            username: "{{user}}",
             csrfmiddlewaretoken: "{{ csrf_token }}",
           },
           dataType: "json",
