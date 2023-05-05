@@ -5,15 +5,136 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {% load static %}
     <title>Sathi Chal || Welcome</title>
+    <style>
+        .popupnotify {
+            width: 550px;
+            height: 400px;
+            background: black;
+            position: fixed;
+            z-index: 99999;
+            top: 35%;
+            left: 25%;
+          }
+    
+          .popupnotify .closenotify {
+            float: right;
+            padding: 12px 20px;
+            font-size: 30px;
+          }
+    
+          .popupnotify .logonotify {
+            display: grid;
+            justify-items: center;
+            padding: 50px 20px;
+          }
+    
+          .popupnotify .notify {
+            color: white;
+            font-size: xx-large;
+            padding: 20px 50px;
+          }
+    
+          .popupnotify .selectbtn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 30px;
+          }
+
+          .selectbtn button{
+            padding: 12px 15px;
+            color: white;
+            background: black;
+            border: none;
+            border-radius: 20px;
+            border: 1px solid;
+            font-family: "Ysabeau", sans-serif;
+            font-weight: 900;
+          }
+    
+          .selectbtn button:hover{
+            color: black;
+            background: white;
+          }
+    
+    
+    </style>
 </head>
 <body>
+    <div class="popupnotify hidden" id="popupnotify">
+        <div class="closenotify">
+          <i class="fas fa-times"  style="color: white" onclick="clearSathiId()" ></i>
+        </div>
+        <div class="logonotify">
+            <img src="{% static 'images/sathichal.png' %}" width="200px" alt="" />
+          </div>
+        <div class="notify">With which group you want to continue ?</div>
+        <div class="selectbtn">
+        <button onclick="closeNotify()">Continue</button>
+        <button onclick="clearSathiId()">New Start</button>
+        </div>
+    </div>
     {% include 'layout/navbar.html' %}
     
     
     {% include 'layout/home_layout.html' %}
 
-
     {% include 'layout/footer.html' %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script>
+        if (localStorage.getItem("sathiId")) {
+            document.getElementById("popupnotify").classList.remove("hidden");
+        }
+
+        function clearSathiId() {
+            var temp = localStorage.getItem("sathiId");
+            console.log(temp);
+            $.ajax({
+              url: "{% url 'groupupdate' %}",
+              type: "POST",
+              data: {
+                sathiId: temp,
+                username: "{{user}}",
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+              },
+              dataType: "json",
+              success: function (result) {
+                console.log(result);
+                if (result.status) {
+                  console.log("success result");
+                  sathiId = "";
+                  localStorage.removeItem("sathiId");
+                  document.getElementById("popupnotify").classList.add("hidden");
+                }
+                console.log(result);
+              },
+            });
+          }
+
+          function closeNotify(){
+            var temp = localStorage.getItem("sathiId");
+            $.ajax({
+                url: "{% url 'groupname' %}",
+                type: "POST",
+                data: {
+                    sathiId: temp,
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                },
+                dataType: "json",
+                success: function (result) {
+                  console.log(result);
+                  if (result.data) {
+                    console.log("success result");
+                    document.getElementById("popupnotify").classList.add("hidden");
+                    window.location.href = result.data;
+                  }
+                },
+              });
+          }
+
+    </script>
 </body>
 </html>

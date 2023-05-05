@@ -120,3 +120,20 @@ def startroute(request,sathi_id):
     return render(request,"startroute.html",context)
      
 
+def groupname(request):
+    sathi_id = request.POST.get('sathiId')
+    if sathi_id:
+        data = group.objects.filter(sathi_id=sathi_id).values()[0]
+        data = str(data['group_name'])
+        data = data.replace('_', '/')
+        data = 'route/' + data[:7] + '/' + data[8:10] + '.' + data[11:13] + '/' + data[14:16] + '.' + data[17:19] + '/' + data[20:22] + '.' + data[23:25] + '/' + data[26:28] + '.' + data[29:31]
+        print(data)
+        response={
+            'status' : 'success',
+            'data' : data
+        }
+    else :
+        response={
+            'status' : 'failed',
+        }
+    return JsonResponse(response)
