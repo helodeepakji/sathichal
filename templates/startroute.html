@@ -303,7 +303,7 @@
                   startrouteSocket.send(
                     JSON.stringify({
                       type: "sendlocation",
-                      username: "{{user}}",
+                      username: data.data.username,
                       loc_user: data.data.loc_user,
                       location_data,
                     })
@@ -312,7 +312,7 @@
             }
 
             if(data.type == "sendLocation"){
-              if(data.data.username != "{{user}}"){
+              if(data.data.username == "{{user}}"){
                 console.log("set location");
                 directionsRenderer.setMap(map);
                 calculateAndDisplayRoute(directionsService,directionsRenderer,source,data.data.location.source);
