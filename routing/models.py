@@ -8,9 +8,9 @@ STATUS_FIElD = [
 ]
 class group(models.Model):
     # jo user add hua
-    added_user = models.CharField(max_length=100)
+    # added_user = models.CharField(max_length=100)
     # jis user ne add kiya / jis user nei confirm kiya
-    added_by_user = models.CharField(max_length=100)
+    user = models.CharField(max_length=100)
     # status complete the travel or not
     status = models.CharField(max_length=1,choices = STATUS_FIElD)
     sathi_id = models.CharField(max_length=10)

@@ -87,11 +87,11 @@ class routConsumer(AsyncWebsocketConsumer):
             time = datetime.now().time()
             sathi_id = text_data_json.get('sathiId','') #['sathiID']
             temp_sathi_id = None
-            is_temp_sathi_id = await database_sync_to_async(group.objects.filter(Q(added_by_user=text_data_json['sender']) | Q(added_user=text_data_json['sender'])|Q(added_by_user=text_data_json['reciver'])|Q(added_user=text_data_json['reciver']),status='P',group_name=self.room_group_name).exists)()
+            is_temp_sathi_id = await database_sync_to_async(group.objects.filter(Q(user=text_data_json['sender']) |Q(user=text_data_json['reciver']),status='P',group_name=self.room_group_name).exists)()
             print("is_temp_sathi_id",is_temp_sathi_id)
             # if sathi id is empty and group is already exist for sender or reciver then use that group id
             if sathi_id == '' and is_temp_sathi_id:
-                temp_sathi_id = await database_sync_to_async(list)(group.objects.filter(Q(added_by_user=text_data_json['sender'])|Q(added_user=text_data_json['sender'])|Q(added_by_user=text_data_json['reciver'])|Q(added_user=text_data_json['reciver']),status='P',group_name=self.room_group_name))
+                temp_sathi_id = await database_sync_to_async(list)(group.objects.filter(Q(user=text_data_json['sender'])|Q(user=text_data_json['reciver']),status='P',group_name=self.room_group_name))
                 print("tarun sathi id",temp_sathi_id[0].sathi_id)
                 try:
                     sathi_id = temp_sathi_id[0].sathi_id
@@ -110,10 +110,21 @@ class routConsumer(AsyncWebsocketConsumer):
             
             print("sathi id before saving group",sathi_id)
             # to save group
-            created_group = group(group_name=self.room_group_name, added_by_user=text_data_json['sender'], added_user=text_data_json['reciver'], status = 'P' ,date=date, time=time, sathi_id=sathi_id)
-            await database_sync_to_async(created_group.save)()
+            is_group_exist_user1 = await database_sync_to_async(group.objects.filter(user=text_data_json['sender'],status='P',group_name=self.room_group_name).exists)()
+            created_group1 = None
+            if not is_group_exist_user1:
+                created_group1 = group(group_name=self.room_group_name,user=text_data_json['sender'], status = 'P' ,date=date, time=time, sathi_id=sathi_id)
+                await database_sync_to_async(created_group1.save)()
             
-            print("group created",created_group)
+            print("group created",created_group1)
+            
+            is_group_exist_user2 = await database_sync_to_async(group.objects.filter(user=text_data_json['reciver'],status='P',group_name=self.room_group_name).exists)()
+            created_group2 = None
+            if not is_group_exist_user2:
+                created_group2 = group(group_name=self.room_group_name, user=text_data_json['reciver'], status = 'P' ,date=date, time=time, sathi_id=sathi_id)
+                await database_sync_to_async(created_group2.save)()
+            
+            print("group created",created_group2)
 
             added_by_user = await database_sync_to_async(self.get_user)(text_data_json['sender']) 
             added_user = await database_sync_to_async(self.get_user)(text_data_json['reciver']) 
@@ -136,8 +147,7 @@ class routConsumer(AsyncWebsocketConsumer):
                 # timeDiffHours = timeDiff.days * 24 + timeDiff.seconds / 3600.0
                 
                 if timeDiff <= timedelta(minutes=60) and i.date == datetime.now().date() and i.status == 'P':
-                    temp_obj['added_by_user'] = i.added_by_user
-                    temp_obj['added_user'] = i.added_user
+                    temp_obj['user'] = i.user
                     temp_obj['date'] = str(i.date)
                     temp_obj['time'] = str(i.time)
                     temp_obj['group_name'] = i.group_name
