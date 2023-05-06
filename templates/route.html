@@ -529,7 +529,7 @@
 
       function addExistlist(user_data) {
         var myEle = document.getElementById(user_data.username);
-        const group_member = document.getElementById(user_data.username);
+        const group_member = document.getElementById("mem_"+user_data.username);
         if (user_data.username != "{{user}}" && !myEle && !group_member) {
           if (user_data.profile_pic == null) {
             var user_img = "{% static 'images/profile.jpg' %}";
