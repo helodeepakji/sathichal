@@ -66,10 +66,6 @@
             padding-left: 10px;
         }
 
-        #source,#destination {
-            width: 90%;
-        }
-
         .findout {
             padding: 10px;
             position: absolute;
@@ -87,6 +83,29 @@
 
         .hidden{
             display: none;
+        }
+
+        @media only screen and (max-width: 700px) {
+            .inputbox {
+                width: inherit;
+                display: grid;
+                position: absolute;
+                top: 130px;
+                right: 0;
+                background: white;
+                padding: 20px 15px;
+                left: 0;
+            }
+            #floating-panel {
+                top: 320px;
+                padding: 10px;
+                width: 100%;
+                left: 0;
+                border: none;
+            }
+            select#mode {
+                padding: 5px 12px;
+            }
         }
 
     </style>

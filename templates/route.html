@@ -24,7 +24,7 @@
       }
       .main_box {
         font-family: "Ysabeau", sans-serif;
-        height: 100vh;
+        height: 800px;
         width: 100%;
         display: flex;
       }
@@ -33,10 +33,6 @@
       }
       .main_box .channel_lay {
         width: 30%;
-      }
-
-      .main_box .map_lay .group {
-        height: 25%;
       }
 
       #map {
@@ -255,6 +251,50 @@
         100% {
           transform: scale(4);
           opacity: 0;
+        }
+      }
+
+      @media only screen and (max-width: 750px) {
+        .main_box {
+          height: auto;
+          display: flex;
+          flex-direction: column;
+        }
+        .main_box .map_lay {
+          width: 100%;
+        }
+        #map {
+          height: 500px;
+        }
+        .main_box .channel_lay {
+          width: 100%;
+          display: flex;
+        }
+        .main_box .channel_lay .request_list,
+        .main_box .channel_lay .user_list{
+          height: 300px;
+          overflow: scroll;
+          width: 50%;
+          border: 0.5px solid #8080804f;
+        }
+        .container {
+          bottom: 30vh;
+          left: 36vw;
+        }
+        .circle {
+          height: 60px;
+          width: 60px;
+        }
+        .userlist .user {
+          padding: 10px;
+        }
+        .list-item-content {
+          margin-left: 10px;
+        }
+        .userlist .user {
+          flex-direction: column;
+          text-align: center;
+          gap: 7px;
         }
       }
 

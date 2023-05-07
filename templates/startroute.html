@@ -192,6 +192,23 @@
         top: 760px;
         cursor: pointer;
     }
+
+    @media only screen and (max-width: 750px) {
+      .main_box {
+        display: flex;
+        flex-direction: column;
+      }
+      .chat_box, .map_box {
+        width: 100%;
+        overflow-x: scroll;
+      }
+      .chat_box {
+        width: 100%;
+      }
+      #chatmsg {
+        height: 400px;
+      }
+    }
           
     </style>
 </head>
