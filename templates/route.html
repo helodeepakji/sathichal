@@ -101,7 +101,6 @@
         padding: 1rem;
         background: white;
         border-radius: 3px;
-        overflow-x: scroll;
         user-select: none;
       }
       figure {
@@ -203,6 +202,40 @@
         padding: 30px;
       }
 
+      /* rating  */
+      .star-rating {
+        font-size: 1rem;
+        position: relative;
+        width: 70px;
+      }
+
+      .star-rating:before {
+        content: "\1f7ca\1f7ca\1f7ca\1f7ca\1f7ca";
+        color: #e5e5e5;
+        filter: drop-shadow(0 0.6rem 0.3rem rgba(0,0,0,0.05));
+      }
+
+      .star-rating__fill {
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        animation: fill-star 2s ease-in-out;
+        
+      }
+
+      .star-rating__fill:before {
+        content: "\1f7ca\1f7ca\1f7ca\1f7ca\1f7ca";
+        color: #FF619B;
+      }
+
+      @keyframes fill-star {
+        0% {
+          width: 0;
+        }
+      }
+
 
       .container {
         position: absolute;
@@ -295,6 +328,9 @@
           flex-direction: column;
           text-align: center;
           gap: 7px;
+        }
+        .star-rating {
+          margin: auto;
         }
       }
 
@@ -548,6 +584,10 @@
                             <p>@` +
             user_data.username +
             `</p>
+            <div class="star-rating">
+              <span class="star-rating__fill" style="width: 20%">
+              </span>
+            </div>
                         </div>
                         <button id="user_` +
             user_data.username +
@@ -593,6 +633,10 @@
                             <p>@` +
             user_data.username +
             `</p>
+            <div class="star-rating">
+              <span class="star-rating__fill" style="width: 20%">
+              </span>
+            </div>
                         </div>
                         <button id="user_` +
             user_data.username +
