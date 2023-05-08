@@ -268,3 +268,16 @@ class routConsumer(AsyncWebsocketConsumer):
 
 # helodeepakji
 # deepak
+
+# feedback
+# sathi id
+# username
+# feedback 1-5
+# rating
+
+# chat
+# sathi id
+# username
+# chat
+# date
+# time
