@@ -90,22 +90,9 @@ def startroute(request,sathi_id):
                     'profile_pic': profile_pic
             }
             response.append(temp)
-        if temp_array.count(temp_group.user) == 0:
-            temp_array.append(temp_group.user)
-            try:
-                profile_pic = sathiUser.objects.get(username=temp_group.user).profile_pic.url
-            except:
-                profile_pic = ''
-            temp = {
-                'username':temp_group.user,
-                'sathi_id':temp_group.sathi_id,
-                'profile_pic': profile_pic
-            }
-            response.append(temp)
     print(response)
     context = {"data": response}
     return render(request,"startroute.html",context)
-     
 
 def groupname(request):
     sathi_id = request.POST.get('sathiId')

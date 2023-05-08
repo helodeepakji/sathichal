@@ -8,7 +8,7 @@ from django.db.models import Q
 # from asgiref.sync import sync_to_async , async_to_sync
 # from django.core import serializers
 from home.models import sathiUser
-from .models import group
+from .models import group, feedback, chat
 from datetime import datetime,  timedelta
 import random
 class routConsumer(AsyncWebsocketConsumer):
@@ -194,8 +194,12 @@ class routConsumer(AsyncWebsocketConsumer):
         #when share your location all users    
         if event['Event'] == 'user_location' :
             user_data = await database_sync_to_async(self.get_user)(event['username']) 
+            user_rating = await database_sync_to_async(self.get_user_rating)(event['username'])
             # print(user_data)
-
+            # user rating 
+            # name of attribute is 'rating' in user_data
+            user_data['rating'] = user_rating
+            print(user_data)
             await self.send(text_data=json.dumps({
                     'type': 'auto',
                     'event' : 'user_location',
@@ -264,7 +268,18 @@ class routConsumer(AsyncWebsocketConsumer):
         
         return send_data
     
-
+    def get_user_rating(self,username):
+        user_feedbacks = feedback.objects.filter(user = username)
+        max_rating = user_feedbacks.__len__() * 5
+        print(max_rating)
+        total_rating = 0
+        for i in user_feedbacks:
+            total_rating = total_rating + i.rating
+        
+        if max_rating == 0:
+            return 0
+        else:
+            return (total_rating/max_rating)*100
 
 # helodeepakji
 # deepak
