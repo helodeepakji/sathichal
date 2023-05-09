@@ -8,6 +8,7 @@ urlpatterns = [
     path('groups/get',views.groupget, name='groupget'),
     path('groups/update/',views.groupupdate, name='groupupdate'),
     path('groups/name/',views.groupname, name='groupname'),
+    path('groups/otpverify/',views.otpverify, name='otpverify'),
     path('startroute/<str:sathi_id>',views.startroute, name='startroute'),
 ]
 
