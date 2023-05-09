@@ -123,7 +123,25 @@ def groupname(request):
 
 
 def otpverify(request):
-    response={
+    print(request.POST)
+    sathi_id = request.POST.get('sathiId')
+    user_verification_number = request.POST.get('user_verification_number')
+    user = request.POST.get('username')
+    if sathi_id and user_verification_number:
+        groups = group.objects.filter(sathi_id=sathi_id,user_verification_number=user_verification_number,user=user)
+        if groups:
+            # print(groups)
+            response = {
+                'status' : 'success',
+            }
+        else:
+            response={
+                'status' : 'failed',
+                'error':'Invalid OTP/user not in group'
+            }
+    else:
+        response={
             'status' : 'failed',
+            'error':'OTP or sathiId not found'
         }
     return JsonResponse(response)
