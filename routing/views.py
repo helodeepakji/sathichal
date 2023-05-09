@@ -119,3 +119,11 @@ def groupname(request):
             'status' : 'failed',
         }
     return JsonResponse(response)
+
+
+
+def otpverify(request):
+    response={
+            'status' : 'failed',
+        }
+    return JsonResponse(response)

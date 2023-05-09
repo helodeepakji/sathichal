@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Document</title>
+    <style>
+        .main {
+            min-height: 80vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }     
+        .error {
+            padding: 50px;
+            font-size: 30px;
+            width: 100%;
+            text-align: center;
+        }
+        .card {
+            width: 500px;
+            border: 1px solid gray;
+            height: 200px;
+            display: flex;
+            border-radius: 20px;
+            padding: 5px;
+        }
+        .card .userlist{
+            width: 50%;
+        }
+        .card .datalist{
+            width: 50%;
+        }
+        .card .datalist {
+            width: 50%;
+            line-height: 30px;
+            font-size: 25px;
+            background: black;
+            color: white;
+            padding: 10px;
+            border-radius: 0 15px 15px 0;
+        }
+        span {
+            width: 100%;
+            display: block;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    {%include "layout/navbar.html"%}
+    <div class="main">
+    {% if order %}
+        <div class="card">
+            <div class="userlist">
+
+            </div>
+            <div class="datalist">
+                <div class="sathid"> <span>Order Id : </span> SATHI21379</div>
+                <div class="date"> <span>Date : </span> 20 March 2023</div>
+                <div class="status"> <span>Status : </span> Complete </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="error">
+            There is no any Order. Please Contact Us.
+        </div>
+    {% endif %}
+        </div>
+    {%include "layout/footer.html"%}
+</body>
+</html>

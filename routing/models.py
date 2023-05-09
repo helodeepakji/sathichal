@@ -38,4 +38,4 @@ class feedback (models.Model):
     time = models.TimeField(auto_now_add=True)
     feedback = models.TextField()
     def __str__(self):
-        return self.group_name
+        return self.user

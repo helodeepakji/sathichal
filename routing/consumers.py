@@ -215,6 +215,8 @@ class routConsumer(AsyncWebsocketConsumer):
         if event['Event'] == 'success' :
             user_data = await database_sync_to_async(self.get_user)(event['username']) 
             # print(user_data)
+            user_rating = await database_sync_to_async(self.get_user_rating)(event['username'])
+            user_data['rating'] = user_rating
 
             await self.send(text_data=json.dumps({
                     'type': 'success',
