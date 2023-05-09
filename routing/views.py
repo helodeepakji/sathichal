@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from home.views import loginfun
 from .models import group
 from home.models import sathiUser
+import random
 # Create your views here.
 
 
@@ -77,6 +78,12 @@ def startroute(request,sathi_id):
     groups = group.objects.filter(sathi_id=sathi_id,status='P')
     response = []
     temp_array = [] # to store the user and added_user username to avoid duplication
+    # to generate the verification number for the user
+    for temp_group in groups:
+        if temp_group.user_verification_number == '':
+            temp_group.user_verification_number = random.randint(100000,999999)
+            temp_group.save()
+
     for temp_group in groups:
         if temp_array.count(temp_group.user) == 0:
             temp_array.append(temp_group.user)
@@ -87,25 +94,13 @@ def startroute(request,sathi_id):
             temp = {
                     'username':temp_group.user,
                     'sathi_id':temp_group.sathi_id,
-                    'profile_pic': profile_pic
-            }
-            response.append(temp)
-        if temp_array.count(temp_group.user) == 0:
-            temp_array.append(temp_group.user)
-            try:
-                profile_pic = sathiUser.objects.get(username=temp_group.user).profile_pic.url
-            except:
-                profile_pic = ''
-            temp = {
-                'username':temp_group.user,
-                'sathi_id':temp_group.sathi_id,
-                'profile_pic': profile_pic
+                    'profile_pic': profile_pic,
+                    'user_verification_number':temp_group.user_verification_number,
             }
             response.append(temp)
     print(response)
     context = {"data": response}
     return render(request,"startroute.html",context)
-     
 
 def groupname(request):
     sathi_id = request.POST.get('sathiId')
