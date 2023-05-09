@@ -14,27 +14,64 @@
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
+            gap: 20px;
         }     
         .error {
             padding: 50px;
             font-size: 30px;
             width: 100%;
+            text-align: center;
+        }
+        .card {
+            width: 500px;
+            border: 1px solid gray;
+            height: 200px;
+            display: flex;
+            border-radius: 20px;
+            padding: 5px;
+        }
+        .card .userlist{
+            width: 50%;
+        }
+        .card .datalist{
+            width: 50%;
+        }
+        .card .datalist {
+            width: 50%;
+            line-height: 30px;
+            font-size: 25px;
+            background: black;
+            color: white;
+            padding: 10px;
+            border-radius: 0 15px 15px 0;
+        }
+        span {
+            width: 100%;
+            display: block;
+            font-size: 15px;
         }
     </style>
 </head>
 <body>
     {%include "layout/navbar.html"%}
     <div class="main">
+    {% if order %}
         <div class="card">
-            {% if order %}
-            
-            {% else %}
-            <div class="error">
-                There is no any Order. Please Contact Us.
+            <div class="userlist">
+
             </div>
-            {% endif %}
+            <div class="datalist">
+                <div class="sathid"> <span>Order Id : </span> SATHI21379</div>
+                <div class="date"> <span>Date : </span> 20 March 2023</div>
+                <div class="status"> <span>Status : </span> Complete </div>
+            </div>
         </div>
-    </div>
+    {% else %}
+        <div class="error">
+            There is no any Order. Please Contact Us.
+        </div>
+    {% endif %}
+        </div>
     {%include "layout/footer.html"%}
 </body>
 </html>
