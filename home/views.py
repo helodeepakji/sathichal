@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from .models import sathiUser, Contact
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password, check_password
+from routing.models import group
 from django.core.mail import send_mail
 from django.conf import settings
 from twilio.rest import Client
@@ -36,7 +37,33 @@ def index(request):
     return render(request,"index.html")
 
 def order(request):
-    return render(request,"order.html")
+    username = request.user.username
+    sathi_ids = group.objects.filter(user = username, status = 'I') # change it to C for production
+    groups = []
+    for sathi_id in sathi_ids:
+        temp_groups = group.objects.filter(sathi_id = sathi_id.sathi_id, status = 'I') # change it to C for production
+        split_group_name = sathi_id.group_name.split('_')
+        src_lat = split_group_name[1]+'.'+split_group_name[2]
+        src_long = split_group_name[3]+'.'+split_group_name[4]
+        dest_lat = split_group_name[5]+'.'+split_group_name[6]
+        dest_long = split_group_name[7]+'.'+split_group_name[8]
+        user_list = []
+        for temp_group in temp_groups:
+            user_name = temp_group.user
+            user_list.append(user_name)
+        temp = {
+            'sathi_id': sathi_id.sathi_id,
+            'users': user_list,
+            'src_lat': src_lat,
+            'src_long': src_long,
+            'dest_lat': dest_lat,
+            'dest_long': dest_long,
+        }
+        groups.append(temp)
+    print(groups)
+    print(username)
+    context = {'groups': groups}
+    return render(request,"order.html",context)
 
 def contact(request):
     if request.method == 'POST':
