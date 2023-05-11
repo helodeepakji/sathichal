@@ -7,6 +7,7 @@ urlpatterns = [
     path('routing', views.routing, name='routing'),
     path('login', views.loginfun, name='login'),
     path('order', views.order, name='order'),
+    path('feedback/<str:sathi_id>', views.feedback, name='feedback'),
     path('signup', views.signupfun, name='signup'),  
     path('contact', views.contact, name='contact'),   
     path('profile', views.profile, name='profile'),   

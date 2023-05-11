@@ -53,15 +53,19 @@ def order(request):
             user_list.append(user_name)
         temp = {
             'sathi_id': sathi_id.sathi_id,
+            'is_feedback': sathi_id.is_feedback,
             'users': user_list,
-            'src_lat': src_lat,
-            'src_long': src_long,
-            'dest_lat': dest_lat,
-            'dest_long': dest_long,
+            'location':{
+                'src_lat': src_lat,
+                'src_long': src_long,
+                'dest_lat': dest_lat,
+                'dest_long': dest_long,
+            },
+            'date': sathi_id.date,
         }
         groups.append(temp)
     print(groups)
-    print(username)
+    
     context = {'groups': groups}
     return render(request,"order.html",context)
 
@@ -208,3 +212,13 @@ def profile(request):
             # else:
             #     sathiuser.phone = phone
         return render(request,"profile.html",{"data":sathiuser})
+
+
+
+def feedback(request,sathi_id):
+    username = request.user.username
+    print(sathi_id)
+    # get method retuen the userdetails (name,username,profile,group_location,sathi_id,date,time) and self given_by feedback
+    # post method add feedback if no existing feedback other update feedback and group table is_feedback trure
+
+    return render(request,"feedback.html")
