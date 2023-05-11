@@ -460,8 +460,9 @@
       }
 
       function verifyUser(){
-        var userverify = $("#verifyuser").text();;
-        var otpverify = document.getElementById("otpverify").value;
+        const userverify = $("#verifyuser").text();;
+        const otpverify = document.getElementById("otpverify").value;
+        const sathiId = localStorage.getItem('sathiId');
         if(otpverify.length == 6){
           $.ajax({
             url: "{% url 'otpverify' %}",
@@ -470,6 +471,7 @@
               username: userverify,
               otp: otpverify,
               csrfmiddlewaretoken: "{{ csrf_token }}",
+              sathiId: sathiId,
             },
             dataType: "json",
             success: function (result) {

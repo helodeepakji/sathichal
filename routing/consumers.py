@@ -197,7 +197,7 @@ class routConsumer(AsyncWebsocketConsumer):
             user_rating = await database_sync_to_async(self.get_user_rating)(event['username'])
             # print(user_data)
             # user rating 
-            # name of attribute is 'rating' in user_data
+            # name of attribute is 'rating' in user_dataff
             user_data['rating'] = user_rating
             print(user_data)
             await self.send(text_data=json.dumps({
