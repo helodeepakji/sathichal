@@ -83,7 +83,7 @@ def startroute(request,sathi_id):
         if temp_group.user_verification_number == '':
             temp_group.user_verification_number = random.randint(100000,999999)
             temp_group.save()
-
+    curr_user = {}
     for temp_group in groups:
         if temp_array.count(temp_group.user) == 0:
             temp_array.append(temp_group.user)
@@ -95,11 +95,19 @@ def startroute(request,sathi_id):
                     'username':temp_group.user,
                     'sathi_id':temp_group.sathi_id,
                     'profile_pic': profile_pic,
-                    'user_verification_number':temp_group.user_verification_number,
             }
+            # if the user is the current user
+            if temp_group.user == request.user.username:
+                curr_user = {
+                    'username':temp_group.user,
+                    'sathi_id':temp_group.sathi_id,
+                    'profile_pic': profile_pic,
+                    'user_verification_number':temp_group.user_verification_number
+                }
             response.append(temp)
     print(response)
-    context = {"data": response}
+    context = {"current_user":curr_user,"data": response}
+    print(context)
     return render(request,"startroute.html",context)
 
 def groupname(request):
