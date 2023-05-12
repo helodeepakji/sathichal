@@ -224,6 +224,12 @@
       font-size: 20px;
   }
 
+  .texthid{
+    background: black;
+    color: white;
+    font-size: 25px;
+  }
+
     @media only screen and (max-width: 750px) {
       .main_box {
         display: flex;
@@ -245,6 +251,7 @@
 </head>
 <body>
     {% include 'layout/navbar.html' %}
+    <div class="texthid">Our OTP : {{current_user.user_verification_number}}</div>
     <div class="main_box">
         <div class="map_box">
             <div class="group_box">
@@ -283,7 +290,7 @@
           <div class="groups">
             <div class="verify">
               <label for="username" id="verifyuser">Select The User</label>
-              <input type="number" id="otpverify" name="otpverify" placeholder="Enter OTP" disabled>
+              <input type="text" id="otpverify" name="otpverify" placeholder="Enter OTP" disabled>
             </div>
             <figure id="root" onclick="verifyUser()">
                 <picture class="personal">
@@ -400,6 +407,9 @@
 
     </script>
     <script>
+
+      const groups = [];
+
       document.querySelector('#chat-message-input').focus();
       document.querySelector('#chat-message-input').onkeyup = function(e) {
           if (e.keyCode === 13) {  // enter, return
@@ -424,7 +434,7 @@
 
       function getLocationUser(username){
           console.log(username);
-          if(username != '{{user}}'){
+          if((username != '{{user}}')&&(!groups.includes(username))){
             document.getElementById('verifyuser').innerHTML = username;
             document.getElementById("otpverify").disabled = false;
           }else{
@@ -476,6 +486,13 @@
             dataType: "json",
             success: function (result) {
               console.log(result);
+              if(result.status != 'failed'){
+                groups.push(userverify);
+                document.getElementById("otpverify").value = "Success";
+                getLocationUser(userverify);
+              }else{
+                document.getElementById("otpverify").value = "enter correct otp";
+              }
             },
           });
         }else{
