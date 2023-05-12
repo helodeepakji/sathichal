@@ -224,6 +224,12 @@
       font-size: 20px;
   }
 
+  .texthid{
+    background: black;
+    color: white;
+    font-size: 25px;
+  }
+
     @media only screen and (max-width: 750px) {
       .main_box {
         display: flex;
@@ -245,6 +251,7 @@
 </head>
 <body>
     {% include 'layout/navbar.html' %}
+    <div class="texthid">Our OTP : {{current_user.user_verification_number}}</div>
     <div class="main_box">
         <div class="map_box">
             <div class="group_box">
