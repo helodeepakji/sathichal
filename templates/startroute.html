@@ -227,6 +227,7 @@
   .texthid{
     background: black;
     color: white;
+    padding: 20px;
     font-size: 25px;
   }
 
@@ -251,7 +252,7 @@
 </head>
 <body>
     {% include 'layout/navbar.html' %}
-    <div class="texthid">Our OTP : {{current_user.user_verification_number}}</div>
+    <div class="texthid">OUR OTP : {{current_user.user_verification_number}}</div>
     <div class="main_box">
         <div class="map_box">
             <div class="group_box">
