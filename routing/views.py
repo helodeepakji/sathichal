@@ -123,10 +123,10 @@ def groupname(request):
 
 
 def otpverify(request):
-    print(request.POST)
     sathi_id = request.POST.get('sathiId')
-    user_verification_number = request.POST.get('user_verification_number')
+    user_verification_number = request.POST.get('otp')
     user = request.POST.get('username')
+    print(user_verification_number)
     response = {}
     if sathi_id and user_verification_number:
         groups = group.objects.filter(sathi_id=sathi_id,user_verification_number=user_verification_number,user=user)
