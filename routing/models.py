@@ -35,6 +35,7 @@ class feedback (models.Model):
     sathi_id = models.CharField(max_length=10)
     rating = models.IntegerField()
     date = models.DateField(auto_now_add=True)
+    feedback_given_by = models.CharField(max_length=500, default="")
     time = models.TimeField(auto_now_add=True)
     feedback = models.TextField()
     def __str__(self):
