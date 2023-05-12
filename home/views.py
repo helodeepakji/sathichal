@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from .models import sathiUser, Contact
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password, check_password
-from routing.models import group
+from routing.models import group, chat, feedback
 from django.core.mail import send_mail
 from django.conf import settings
 from twilio.rest import Client
@@ -94,7 +94,7 @@ def routing(request):
         return render(request,"routing.html")
     else :
         return redirect(loginfun)
-       
+
 
 
 def loginfun(request):
@@ -218,7 +218,35 @@ def profile(request):
 def feedback(request,sathi_id):
     username = request.user.username
     print(sathi_id)
-    # get method retuen the userdetails (name,username,profile,group_location,sathi_id,date,time) and self given_by feedback
+    # get method return the userdetails (name,username,profile,group_location,sathi_id,date,time) and self given_by feedback
+    if request.method == "GET":
+        
+        temp_feedback = feedback.objects.get(user = username,sathi_id=sathi_id)
+        temp_group = group.objects.get(sathi_id=sathi_id)
+        first_name = sathiUser.objects.get(username=username).first_name
+        last_name = sathiUser.objects.get(username=username).last_name
+        temp_location = temp_group.group_name.split("_")
+        src_lat = temp_location[1]+"."+temp_location[2]
+        src_long = temp_location[3]+"."+temp_location[4]
+        dest_lat = temp_location[5]+"."+temp_location[6]
+        dest_long = temp_location[7]+"."+temp_location[8]
+        # print(group_location)
+        # feedbacks = feedback.objects.filter(given_by=sathiuser,sathi=sathi)
+        if temp_feedback:
+            context = {"user":username,"user_first_name":first_name,"user_last_name":last_name,"src_lat":src_lat,"src_long":src_long,"dest_lat":dest_lat,"dest_long":dest_long}
+        else:
+            context = {"error":"no feedbacks yet"}
+        return render(request,"feedback.html",context)
     # post method add feedback if no existing feedback other update feedback and group table is_feedback trure
+    if request.mehod == "POST":
+        feedback = request.POST['feedback']
+        sathiuser = sathiUser.objects.get(username=username)
+        sathi = sathiUser.objects.get(id=sathi_id)
+        groups = group.objects.get(sathi=sathi)
+        groups.is_feedback = True
+        groups.save()
+        feedback = feedback.objects.create(given_by=sathiuser,sathi=sathi,feedback=feedback)
+        feedback.save()
+        return redirect(index)
 
     return render(request,"feedback.html")
