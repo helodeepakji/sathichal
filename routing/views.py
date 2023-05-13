@@ -139,10 +139,10 @@ def otpverify(request):
     if sathi_id and user_verification_number:
         groups = group.objects.filter(sathi_id=sathi_id,user_verification_number=user_verification_number,user=user)
         if groups:
-            # print(groups)
             response = {
                 'status' : 'success',
             }
+            groups.update(status='C')
         else:
             response={
                 'status' : 'failed',
