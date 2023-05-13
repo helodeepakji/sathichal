@@ -215,23 +215,22 @@ def profile(request):
 
 
 
-def feedback(request,sathi_id):
+def feedback_handler(request,sathi_id):
     username = request.user.username
     print(sathi_id)
+    print(request.method)
     # get method return the userdetails (name,username,profile,group_location,sathi_id,date,time) and self given_by feedback
     if request.method == "GET":
-        
-        temp_feedback = feedback.objects.get(user = username,sathi_id=sathi_id)
-        temp_group = group.objects.get(sathi_id=sathi_id)
+        temp_feedback = feedback.objects.filter(sathi_id=sathi_id,feedback_given_by=username)
+        temp_group = group.objects.filter(sathi_id=sathi_id,status='C')
         first_name = sathiUser.objects.get(username=username).first_name
         last_name = sathiUser.objects.get(username=username).last_name
-        temp_location = temp_group.group_name.split("_")
+        temp_location = temp_group[0].group_name.split("_")
         src_lat = temp_location[1]+"."+temp_location[2]
         src_long = temp_location[3]+"."+temp_location[4]
         dest_lat = temp_location[5]+"."+temp_location[6]
         dest_long = temp_location[7]+"."+temp_location[8]
         # print(group_location)
-        # feedbacks = feedback.objects.filter(given_by=sathiuser,sathi=sathi)
         if temp_feedback:
             context = {"user":username,"user_first_name":first_name,"user_last_name":last_name,"src_lat":src_lat,"src_long":src_long,"dest_lat":dest_lat,"dest_long":dest_long}
         else:
@@ -239,14 +238,14 @@ def feedback(request,sathi_id):
         return render(request,"feedback.html",context)
     # post method add feedback if no existing feedback other update feedback and group table is_feedback trure
     if request.mehod == "POST":
-        feedback = request.POST['feedback']
+        current_feedback = request.POST['feedback']
         sathiuser = sathiUser.objects.get(username=username)
         sathi = sathiUser.objects.get(id=sathi_id)
         groups = group.objects.get(sathi=sathi)
         groups.is_feedback = True
         groups.save()
-        feedback = feedback.objects.create(given_by=sathiuser,sathi=sathi,feedback=feedback)
-        feedback.save()
+        temp_feedback1 = feedback.objects.create(feedback_given_by=sathiuser,sathi=sathi,feedback=current_feedback)
+        temp_feedback1.save()
         return redirect(index)
 
     return render(request,"feedback.html")
