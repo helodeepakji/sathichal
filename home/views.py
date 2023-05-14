@@ -253,7 +253,7 @@ def feedback_handler(request,sathi_id):
                     context.append(user)
         else:
             context = {'error':'invalid sathi id'}
-        return render(request,"feedback.html",context)
+        return render(request,"feedback.html",{'data':context})
     # post method add feedback if no existing feedback other update feedback and group table is_feedback trure
     if request.mehod == "POST":
         current_feedback = request.POST['feedback']
