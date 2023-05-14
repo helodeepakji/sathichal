@@ -38,10 +38,10 @@ def index(request):
 
 def order(request):
     username = request.user.username
-    sathi_ids = group.objects.filter(user = username, status = 'I') # change it to C for production
+    sathi_ids = group.objects.filter(user = username, status = 'C') # change it to C for production
     groups = []
     for sathi_id in sathi_ids:
-        temp_groups = group.objects.filter(sathi_id = sathi_id.sathi_id, status = 'I') # change it to C for production
+        temp_groups = group.objects.filter(sathi_id = sathi_id.sathi_id, status = 'C') # change it to C for production
         split_group_name = sathi_id.group_name.split('_')
         src_lat = split_group_name[1]+'.'+split_group_name[2]
         src_long = split_group_name[3]+'.'+split_group_name[4]
