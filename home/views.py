@@ -249,6 +249,10 @@ def feedback_handler(request,sathi_id):
                         'dest_lat':dest_lat,
                         'dest_long':dest_long,
                         'sathi_id':sathi_id,
+                        'is_feedback': sathi_user.is_feedback,
+                        #'feedback': this user's feedback,
+                        'date': sathi_user.date,
+                        'time' : sathi_user.time
                     }
                     context.append(user)
         else:
