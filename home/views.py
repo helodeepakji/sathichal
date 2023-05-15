@@ -233,16 +233,29 @@ def feedback_handler(request,sathi_id):
         context = []
         if temp_group:
             for sathi_user in temp_group:
+                error=""
                 temp_profile_pic = sathiUser.objects.get(username=sathi_user.user).profile_pic
-                temp_feedback = feedback.objects.filter(user=sathi_user.user,sathi_id=sathi_id)
-                comments = []
-                rating = 0
+                # if object exists
+                try:
+                    temp_feedback = feedback.objects.get(user=sathi_user.user,sathi_id=sathi_id,feedback_given_by=username)
+                # if object does not exist 
+                except:
+                    temp_feedback = None
+                    error = "No feedback given"
+                if temp_feedback != None:
+                    if temp_feedback.feedback:
+                        comments = temp_feedback.feedback
+                    else:
+                        comments = ""
+                    if temp_feedback.rating:
+                        rating = (temp_feedback.rating/5)*100
+                    else:
+                        rating = 0
+                else:
+                    comments = ""
+                    rating = 0
+                
                 # list of comments and feedback of user
-                if temp_feedback:
-                    rating = cal_feedback(sathi_user.user)
-                    if sathi_user.is_feedback == True:
-                        for i in temp_feedback:
-                            comments.append(i.feedback)
                 
                 if temp_profile_pic:
                     profile_pic = temp_profile_pic.url
@@ -263,7 +276,8 @@ def feedback_handler(request,sathi_id):
                         'rating': rating,
                         'comment': comments,
                         'date': sathi_user.date,
-                        'time' : sathi_user.time
+                        'time' : sathi_user.time,
+                        'error':error
                     }
                     context.append(user)
         else:
