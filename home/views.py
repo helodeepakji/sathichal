@@ -286,13 +286,15 @@ def feedback_handler(request,sathi_id):
     # post method add feedback if no existing feedback other update feedback and group table is_feedback trure
     if request.mehod == "POST":
         current_feedback = request.POST['feedback']
-        
-        sathiuser = sathiUser.objects.get(username=username)
+        otherusername = request.POST['username']
+        rating = request.POST['rating']
+        print(current_feedback)
+        # sathiuser = sathiUser.objects.get(username=username)
         
         groups = group.objects.get(sathi_id=sathi_id,status='C')
         groups.is_feedback = True
         groups.save()
-        temp_feedback1 = feedback.objects.create(feedback_given_by=sathiuser.username,user = sathiuser.username,feedback=current_feedback)
+        temp_feedback1 = feedback.objects.create(feedback_given_by=username,user = otherusername,feedback=current_feedback,sathi_id=sathi_id,rating=rating)
         temp_feedback1.save()
         return redirect(index)
 
