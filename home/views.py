@@ -8,7 +8,7 @@ from routing.models import group, chat, feedback
 from django.core.mail import send_mail
 from django.conf import settings
 from twilio.rest import Client
-from .util import otp_handler
+from .util import otp_handler, cal_feedback
 
 # for testing
 
@@ -234,6 +234,16 @@ def feedback_handler(request,sathi_id):
         if temp_group:
             for sathi_user in temp_group:
                 temp_profile_pic = sathiUser.objects.get(username=sathi_user.user).profile_pic
+                temp_feedback = feedback.objects.filter(user=sathi_user.user,sathi_id=sathi_id)
+                comments = []
+                rating = 0
+                # list of comments and feedback of user
+                if temp_feedback:
+                    rating = cal_feedback(sathi_user.user)
+                    if sathi_user.is_feedback == True:
+                        for i in temp_feedback:
+                            comments.append(i.feedback)
+                
                 if temp_profile_pic:
                     profile_pic = temp_profile_pic.url
                 else:
@@ -250,8 +260,8 @@ def feedback_handler(request,sathi_id):
                         'dest_long':dest_long,
                         'sathi_id':sathi_id,
                         'is_feedback': sathi_user.is_feedback,
-                        #'rating': this user's feedback,
-                        #'comment': if is_feedback is true,
+                        'rating': rating,
+                        'comment': comments,
                         'date': sathi_user.date,
                         'time' : sathi_user.time
                     }
