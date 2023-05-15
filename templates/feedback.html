@@ -18,6 +18,11 @@
             background: white;
             border-radius: 50px;
             flex-wrap: wrap;
+            overflow: hidden;
+        }
+
+        .hidden{
+          display: none;
         }
 
 
@@ -32,7 +37,7 @@
 
 .container{
   position: relative;
-  width: 400px;
+  width: -webkit-fill-available;
   background: #111;
   padding: 20px 30px;
   border: 1px solid #444;
@@ -51,18 +56,7 @@
   color: #666;
   font-weight: 500;
 }
-.container .edit{
-  position: absolute;
-  right: 10px;
-  top: 5px;
-  font-size: 16px;
-  color: #666;
-  font-weight: 500;
-  cursor: pointer;
-}
-.container .edit:hover{
-  text-decoration: underline;
-}
+
 .container .star-widget input{
   display: none;
 }
@@ -100,7 +94,7 @@ input#rate-5:checked ~ label{
   content: "I just love it ";
 }
 .container form{
-  display: none;
+  /*display: none;*/
 }
 input:checked ~ form{
   display: block;
@@ -138,7 +132,7 @@ form .btn{
   width: 100%;
   margin: 15px 0;
 }
-form .btn button{
+form .btn button,.edit{
   height: 100%;
   width: 100%;
   border: 1px solid #444;
@@ -179,12 +173,29 @@ th, td {
   text-align: center;
 }
 
+.heading{
+  text-align: center;
+  width: 100%;
+  padding: 20px;
+  text-transform: uppercase;
+  font-family: 'Ubuntu';
+  text-decoration: underline;
+}
+
+.star-widget {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
     </style>
 </head>
 <body>
     {% include 'layout/navbar.html' %}
     {{data}}
     <div class="main">
+      <h1 class="heading">Order Details</h1>
         <div class="map">
           <div class="data">
             <table>
@@ -225,24 +236,35 @@ th, td {
               </div>
               <div class="star-widget">
                   <div class="star">
-                    <input type="radio" name="rate" id="rate-5">
-                    <label for="rate-5" class="fas fa-star"></label>
-                    <input type="radio" name="rate" id="rate-4">
-                    <label for="rate-4" class="fas fa-star"></label>
-                    <input type="radio" name="rate" id="rate-3">
-                    <label for="rate-3" class="fas fa-star"></label>
-                    <input type="radio" name="rate" id="rate-2">
-                    <label for="rate-2" class="fas fa-star"></label>
-                    <input type="radio" name="rate" id="rate-1">
-                    <label for="rate-1" class="fas fa-star"></label>
+                    <input type="radio" name="{{feedback.username}}_rate" value="5" id="{{feedback.username}}_rate-5" onchange="handleRadioChange(event,'{{feedback.username}}')">
+                    <label for="{{feedback.username}}_rate-5" class="fas fa-star"></label>
+                    <input type="radio" name="{{feedback.username}}_rate" value="4" id="{{feedback.username}}_rate-4" onchange="handleRadioChange(event,'{{feedback.username}}')">
+                    <label for="{{feedback.username}}_rate-4" class="fas fa-star"></label>
+                    <input type="radio" name="{{feedback.username}}_rate" value="3" id="{{feedback.username}}_rate-3" onchange="handleRadioChange(event,'{{feedback.username}}')">
+                    <label for="{{feedback.username}}_rate-3" class="fas fa-star"></label>
+                    <input type="radio" name="{{feedback.username}}_rate" value="2" id="{{feedback.username}}_rate-2" onchange="handleRadioChange(event,'{{feedback.username}}')">
+                    <label for="{{feedback.username}}_rate-2" class="fas fa-star"></label>
+                    <input type="radio" name="{{feedback.username}}_rate" value="1" id="{{feedback.username}}_rate-1" onchange="handleRadioChange(event,'{{feedback.username}}')">
+                    <label for="{{feedback.username}}_rate-1" class="fas fa-star"></label>
                   </div>
-                  <form action="#">
-                    <header></header>
+                  <form action="/feedback" method="post"> 
                     <div class="textarea">
-                        <textarea cols="30" placeholder="Describe your experience.."></textarea>
+                      <input type="hidden" name="username" value="{{feedback.username}}">
+                      {% if feedback.is_feedback %}
+                        <input type="hidden" id="{{feedback.username}}" name="rating" value="{{feedback.rating}}">
+                        <textarea cols="30" id="comment" name="comment" placeholder="Describe your experience.." readonly>{{feedback.comment}}</textarea>
+                      {% else %}
+                        <input type="hidden" id="{{feedback.username}}" name="rating" value="0">
+                        <textarea cols="30" id="comment" name="comment" placeholder="Describe your experience.."></textarea>
+                      {% endif %}
                     </div>
                     <div class="btn">
-                        <button id="post" type="submit">Post</button>
+                        {% if feedback.is_feedback %}
+                          <button type="reset" class="edit" onclick="removeReadOnly()">EDIT</button>
+                          <button id="post" class="hidden" type="submit">Post</button>
+                        {% else %}
+                          <button id="post" type="submit">Post</button>
+                        {% endif %}
                     </div>
                   </form>
               </div>
@@ -252,19 +274,18 @@ th, td {
 
 {% include 'layout/footer.html' %}
 <script>
-  const btn = document.getElementById("post");
-  const post = document.querySelector(".post");
-  const widget = document.querySelector(".star-widget");
-  const editBtn = document.querySelector(".edit");
-  btn.onclick = ()=>{
-    widget.style.display = "none";
-    post.style.display = "block";
-    editBtn.onclick = ()=>{
-      widget.style.display = "block";
-      post.style.display = "none";
+    function handleRadioChange(event,username){
+      if(event.target.checked){
+        document.getElementById(username).value = event.target.value;
+        console.log("check user "+username);
+      }
     }
-    return false;
-  }
+
+    function removeReadOnly(){
+        document.getElementById('comment').readOnly = false;
+        document.getElementById('post').classList.remove("hidden");
+    }
+
 </script>
 </body>
 </html>

@@ -250,7 +250,8 @@ def feedback_handler(request,sathi_id):
                         'dest_long':dest_long,
                         'sathi_id':sathi_id,
                         'is_feedback': sathi_user.is_feedback,
-                        #'feedback': this user's feedback,
+                        #'rating': this user's feedback,
+                        #'comment': if is_feedback is true,
                         'date': sathi_user.date,
                         'time' : sathi_user.time
                     }
