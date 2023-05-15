@@ -247,15 +247,17 @@ th, td {
                     <input type="radio" name="{{feedback.username}}_rate" value="1" id="{{feedback.username}}_rate-1" onchange="handleRadioChange(event,'{{feedback.username}}')">
                     <label for="{{feedback.username}}_rate-1" class="fas fa-star"></label>
                   </div>
-                  <form action="/feedback" method="post"> 
+                  <form action="/feedback/{{feedback.sathi_id}}" method="post"> 
+                    {% csrf_token %}
                     <div class="textarea">
                       <input type="hidden" name="username" value="{{feedback.username}}">
+                      <input type="hidden" name="sathi_id" value="{{feedback.sathi_id}}">
                       {% if feedback.is_feedback %}
                         <input type="hidden" id="{{feedback.username}}" name="rating" value="{{feedback.rating}}">
-                        <textarea cols="30" id="comment" name="comment" placeholder="Describe your experience.." readonly>{{feedback.comment}}</textarea>
+                        <textarea cols="30" id="comment" name="feedback" placeholder="Describe your experience.." readonly>{{feedback.comment}}</textarea>
                       {% else %}
                         <input type="hidden" id="{{feedback.username}}" name="rating" value="0">
-                        <textarea cols="30" id="comment" name="comment" placeholder="Describe your experience.."></textarea>
+                        <textarea cols="30" id="comment" name="feedback" placeholder="Describe your experience.."></textarea>
                       {% endif %}
                     </div>
                     <div class="btn">
