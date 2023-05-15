@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {% load static %}
     <title>Document</title>
     <style>
         body{
@@ -12,12 +13,18 @@
         }
         .main {
             display: flex;
-            height: 75vh;
             box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
             margin: 50px;
             background: white;
             border-radius: 50px;
+            flex-wrap: wrap;
         }
+
+
+        .map {
+          width: 100%;   
+          padding: 50px;
+      }
 
 
 
@@ -154,49 +161,98 @@ form .btn button:hover{
     font-family: monospace;
 }
 
+.container img {
+  width: 64px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 1px solid #b1b1b1;
+  border-radius: 50%;
+}
+
+table {
+  width: 100%;
+}
+
+th, td {
+  padding: 10px 12px;
+  border: 1px solid;
+  text-align: center;
+}
+
     </style>
 </head>
 <body>
     {% include 'layout/navbar.html' %}
+    {{data}}
     <div class="main">
-        <div class="map"></div>
-        <div class="user">
-            <div class="container">
-                <h1 class="txtline">Feedback</h1> 
-            <div class="post">
-                <div class="text">Thanks for rating us!</div>
-                <div class="edit">EDIT</div>
-            </div>
-            <div class="star-widget">
-                <input type="radio" name="rate" id="rate-5">
-                <label for="rate-5" class="fas fa-star"></label>
-                <input type="radio" name="rate" id="rate-4">
-                <label for="rate-4" class="fas fa-star"></label>
-                <input type="radio" name="rate" id="rate-3">
-                <label for="rate-3" class="fas fa-star"></label>
-                <input type="radio" name="rate" id="rate-2">
-                <label for="rate-2" class="fas fa-star"></label>
-                <input type="radio" name="rate" id="rate-1">
-                <label for="rate-1" class="fas fa-star"></label>
-                <form action="#">
-                <header></header>
-                <div class="textarea">
-                    <textarea cols="30" placeholder="Describe your experience.."></textarea>
-                </div>
-                <div class="btn">
-                    <button type="submit">Post</button>
-                </div>
-                </form>
-            </div>
-            </div>
-    
-    
+        <div class="map">
+          <div class="data">
+            <table>
+              <thead>
+                <tr>
+                <th>Username</th>
+                <th>Sathi Id </th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Location</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for feedback in data %}
+                <tr>
+                  <td>{{feedback.username}}</td>
+                  <td>{{feedback.sathi_id}}</td>
+                  <td>{{feedback.date}}</td>
+                  <td>{{feedback.time}}</td>
+                  <td><button>Location</button></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
+        {% for feedback in data %}
+            <div class="container">
+              {% if feedback.profile_pic %}
+                <img src="{{feedback.profile_pic}}" alt="">
+              {% else %}
+                <img src="{% static 'images/profile.jpg' %}" alt="">
+              {% endif %}
+              <h1 class="txtline">Feedback for {{feedback.first_name}} {{feedback.last_name}}</h1> 
+              <div class="post">
+                  <div class="text">Thanks for rating us!</div>
+                  <div class="edit">EDIT</div>
+              </div>
+              <div class="star-widget">
+                  <div class="star">
+                    <input type="radio" name="rate" id="rate-5">
+                    <label for="rate-5" class="fas fa-star"></label>
+                    <input type="radio" name="rate" id="rate-4">
+                    <label for="rate-4" class="fas fa-star"></label>
+                    <input type="radio" name="rate" id="rate-3">
+                    <label for="rate-3" class="fas fa-star"></label>
+                    <input type="radio" name="rate" id="rate-2">
+                    <label for="rate-2" class="fas fa-star"></label>
+                    <input type="radio" name="rate" id="rate-1">
+                    <label for="rate-1" class="fas fa-star"></label>
+                  </div>
+                  <form action="#">
+                    <header></header>
+                    <div class="textarea">
+                        <textarea cols="30" placeholder="Describe your experience.."></textarea>
+                    </div>
+                    <div class="btn">
+                        <button id="post" type="submit">Post</button>
+                    </div>
+                  </form>
+              </div>
+          </div>
+        {% endfor %}
     </div>
 
 {% include 'layout/footer.html' %}
 <script>
-  const btn = document.querySelector("button");
+  const btn = document.getElementById("post");
   const post = document.querySelector(".post");
   const widget = document.querySelector(".star-widget");
   const editBtn = document.querySelector(".edit");
