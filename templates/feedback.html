@@ -247,7 +247,7 @@ th, td {
                     <input type="radio" name="{{feedback.username}}_rate" value="1" id="{{feedback.username}}_rate-1" onchange="handleRadioChange(event,'{{feedback.username}}')">
                     <label for="{{feedback.username}}_rate-1" class="fas fa-star"></label>
                   </div>
-                  <form action="/feedback/{{feedback.sathi_id}}" method="post"> 
+                  <form action="" method="post"> 
                     {% csrf_token %}
                     <div class="textarea">
                       <input type="hidden" name="username" value="{{feedback.username}}">

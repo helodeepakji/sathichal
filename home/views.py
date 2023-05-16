@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from twilio.rest import Client
 from .util import otp_handler, cal_feedback
+from datetime import datetime
 
 # for testing
 
@@ -284,18 +285,21 @@ def feedback_handler(request,sathi_id):
             context = {'error':'invalid sathi id'}
         return render(request,"feedback.html",{'data':context})
     # post method add feedback if no existing feedback other update feedback and group table is_feedback trure
-    if request.mehod == "POST":
-        current_feedback = request.POST['feedback']
-        otherusername = request.POST['username']
+    if request.method == "POST":
+        error = ""
+        print(request.POST)
+        feed_to = request.POST['username']
         rating = request.POST['rating']
-        print(current_feedback)
-        # sathiuser = sathiUser.objects.get(username=username)
+        temp_comment = request.POST['comment']
+        groups = group.objects.get(sathi_id=sathi_id,status='C',user=feed_to)
+        print(feed_to)
+        if groups:
+            temp_feedback1 = feedback.objects.create(feedback_given_by=username,user = feed_to,feedback=temp_comment,rating=rating,sathi_id=sathi_id,date=datetime.today(),time=datetime.now().time())
+            temp_feedback1.save()
+            groups.is_feedback = True
+            groups.save()
+        else:
+            error = "invalid sathi id/group does not exist"
         
-        groups = group.objects.get(sathi_id=sathi_id,status='C')
-        groups.is_feedback = True
-        groups.save()
-        temp_feedback1 = feedback.objects.create(feedback_given_by=username,user = otherusername,feedback=current_feedback,sathi_id=sathi_id,rating=rating)
-        temp_feedback1.save()
-        return redirect(index)
 
-    return render(request,"feedback.html")
+        return render(request,"feedback.html",{'error':error})
