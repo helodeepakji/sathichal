@@ -274,7 +274,7 @@ def feedback_handler(request,sathi_id):
                         'dest_long':dest_long,
                         'sathi_id':sathi_id,
                         'is_feedback': sathi_user.is_feedback,
-                        'rating': rating,
+                        'rating': rating/20,
                         'comment': comments,
                         'date': sathi_user.date,
                         'time' : sathi_user.time,
@@ -290,7 +290,7 @@ def feedback_handler(request,sathi_id):
         print(request.POST)
         feed_to = request.POST['username']
         rating = request.POST['rating']
-        temp_comment = request.POST['comment']
+        temp_comment = request.POST['feedback']
         groups = group.objects.get(sathi_id=sathi_id,status='C',user=feed_to)
         print(feed_to)
         if groups:
@@ -302,4 +302,4 @@ def feedback_handler(request,sathi_id):
             error = "invalid sathi id/group does not exist"
         
 
-        return render(request,"feedback.html",{'error':error})
+        return redirect('feeback/'+sathi_id)
