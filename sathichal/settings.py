@@ -141,22 +141,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # temporary email backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.zoho.in'
+EMAIL_HOST = 'smtp.nxttour.in'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'letsconversate@zohomail.in'
-EMAIL_HOST_PASSWORD = 'conversation12'
+EMAIL_HOST_USER = 'support@nxttour.in'
+EMAIL_HOST_PASSWORD = '########'
 
 TWILIO_ACCOUNT_SID = 'ACa146af9bf0771ff1106ca918cf82c201'
 TWILIO_ACCOUNT_AUTH_TOKEN = '4d9a1112f2f1fb4992b3d466bb621f6f'
 TWILIO_PHONE_NUMBER = '+15075163369'
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dxobi1y9g',
-    'API_KEY': '445997531442974',
-    'API_SECRET': '7BsBUy7Go6Uh2mFzdCg_NwPHvqI'
+    'CLOUD_NAME': 'dksbgqbo6',
+    'API_KEY': '322628687499316',
+    'API_SECRET': 'pqkE9yOMLpeq6sZ5X746pkBaS_E'
 }
-
-
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
